@@ -1587,7 +1587,7 @@ void Write_Number(unsigned long num,unsigned int X_Position,unsigned int Y_Posit
 
 
 
-void Set_Display_Letters_SSD1963(unsigned int X_Position, unsigned int Y_Position){
+void Set_Display_Letters_S1D13517(unsigned int X_Position, unsigned int Y_Position){
 
      unsigned int Set_Start_Column = 0x01 | X_Position/4;
      unsigned int Set_Start_Row = 0x00 | Y_position/4;
@@ -1610,790 +1610,20 @@ void Set_Display_Letters_SSD1963(unsigned int X_Position, unsigned int Y_Positio
      TFT_CS = 1;
 }
 
-void Write_Character_0(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
+void Write_Character(unsigned int Letter_Font_Length_Bytes_Start, unsigned int Letter_Font_Length_Bytes_End, unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
      static unsigned char x=0;
      static unsigned char dataout = 0;
      static unsigned int i=1;
      static unsigned int jj=0;
      Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
+     Set_Display_Letters_S1D13517(X_Position,Y_Position);
      TFT_CS = 0;
-     for(jj=Letter_Font_Start; jj<Letter_Font_Length_Bytes*1; jj++){
+     for(jj=Letter_Font_Length_Bytes_Start; jj<Letter_Font_Length_Bytes_End; jj++){
       for(x=0; x<8; x++){
           dataout = Letter_Font[jj] &i;
         if(dataout){
           Write_Data_EpsonS1D13517(Pixel);
          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_1(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*1; jj<Letter_Font_Length_Bytes*2; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_2(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*2; jj<Letter_Font_Length_Bytes*3; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_3(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*3; jj<Letter_Font_Length_Bytes*4; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_4(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*4; jj<Letter_Font_Length_Bytes*5; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_5(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*5; jj<Letter_Font_Length_Bytes*6; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_6(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*6; jj<Letter_Font_Length_Bytes*7; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_7(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*7; jj<Letter_Font_Length_Bytes*8; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_8(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*8; jj<Letter_Font_Length_Bytes*9; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_9(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*9; jj<Letter_Font_Length_Bytes*10; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_A(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*10; jj<Letter_Font_Length_Bytes*11; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_B(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*11; jj<Letter_Font_Length_Bytes*12; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_C(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*12; jj<Letter_Font_Length_Bytes*13; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_D(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*13; jj<Letter_Font_Length_Bytes*14; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_E(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*14; jj<Letter_Font_Length_Bytes*15; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_F(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*15; jj<Letter_Font_Length_Bytes*16; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_G(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*16; jj<Letter_Font_Length_Bytes*17; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_H(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*17; jj<Letter_Font_Length_Bytes*18; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_I(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*18; jj<Letter_Font_Length_Bytes*19; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_J(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*19; jj<Letter_Font_Length_Bytes*20; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_K(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*20; jj<Letter_Font_Length_Bytes*21; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_L(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*21; jj<Letter_Font_Length_Bytes*22; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_M(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*22; jj<Letter_Font_Length_Bytes*23; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_N(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*23; jj<Letter_Font_Length_Bytes*24; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_O(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*24; jj<Letter_Font_Length_Bytes*25; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_P(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*25; jj<Letter_Font_Length_Bytes*26; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_Q(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*26; jj<Letter_Font_Length_Bytes*27; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_R(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*27; jj<Letter_Font_Length_Bytes*28; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_S(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*28; jj<Letter_Font_Length_Bytes*29; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_T(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*29; jj<Letter_Font_Length_Bytes*30; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_U(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*30; jj<Letter_Font_Length_Bytes*31; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_V(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*31; jj<Letter_Font_Length_Bytes*32; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_W(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*32; jj<Letter_Font_Length_Bytes*33; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_X(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*33; jj<Letter_Font_Length_Bytes*34; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_Y(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*34; jj<Letter_Font_Length_Bytes*35; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
-          i=i<<1;
-        if (i>128){
-              i=1;}
-       }
-     }
-     TFT_CS = 1;
-}
-
-void Write_Character_Z(unsigned int X_Position, unsigned int Y_Position, unsigned int Colour){
-     static unsigned char x=0;
-     static unsigned char dataout = 0;
-     static unsigned int i=1;
-     static unsigned int jj=0;
-     Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
-     TFT_CS = 0;
-     for(jj=Letter_Font_Length_Bytes*35; jj<Letter_Font_Length_Bytes*36; jj++){
-      for(x=0; x<8; x++){
-          dataout = Letter_Font[jj] &i;
-        if(dataout){
-           Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);}
           i=i<<1;
         if (i>128){
               i=1;}
@@ -2408,7 +1638,7 @@ void Write_Character_Dot(unsigned int X_Position, unsigned int Y_Position, unsig
      static unsigned int i=1;
      static unsigned int jj=0;
      Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
+     Set_Display_Letters_S1D13517(X_Position,Y_Position);
      TFT_CS = 0;
      for(jj=Letter_Font_Length_Bytes*36; jj<Letter_Font_Length_Bytes*37; jj++){
       for(x=0; x<8; x++){
@@ -2429,7 +1659,7 @@ void Write_Character_Space(unsigned int X_Position, unsigned int Y_Position, uns
      static unsigned char dataout = 0;
      static unsigned int jj=0;
      Get_Pixel_Colour(Colour);
-     Set_Display_Letters_SSD1963(X_Position,Y_Position);
+     Set_Display_Letters_S1D13517(X_Position,Y_Position);
      TFT_CS = 0;
      for(jj=0; jj<Letter_Font_Length_Bytes*10; jj++){    //Space
        Write_Data_EpsonS1D13517(Background_Colour);
@@ -2442,129 +1672,129 @@ void Display_Character(unsigned char Value, unsigned int X_Position, unsigned in
      switch (Value)  {
      case 46:    Write_Character_Dot(X_Position,Y_Position, Colour);
                  break;
-     case 48:    Write_Character_0(X_Position,Y_Position, Colour);
+     case 48:    Write_Character(Letter_Font_Length_Bytes*0,Letter_Font_Length_Bytes*1, X_Position,Y_Position, Colour);//0
                  break;
-     case 49:    Write_Character_1(X_Position,Y_Position, Colour);
+     case 49:    Write_Character(Letter_Font_Length_Bytes*1,Letter_Font_Length_Bytes*2, X_Position,Y_Position, Colour);//1
                  break;
-     case 50:    Write_Character_2(X_Position,Y_Position, Colour);
+     case 50:    Write_Character(Letter_Font_Length_Bytes*2,Letter_Font_Length_Bytes*3, X_Position,Y_Position, Colour);//2
                  break;
-     case 51:    Write_Character_3(X_Position,Y_Position, Colour);
+     case 51:    Write_Character(Letter_Font_Length_Bytes*3,Letter_Font_Length_Bytes*4, X_Position,Y_Position, Colour);//3
                  break;
-     case 52:    Write_Character_4(X_Position,Y_Position, Colour);
+     case 52:    Write_Character(Letter_Font_Length_Bytes*4,Letter_Font_Length_Bytes*5, X_Position,Y_Position, Colour);//4
                  break;
-     case 53:    Write_Character_5(X_Position,Y_Position, Colour);
+     case 53:    Write_Character(Letter_Font_Length_Bytes*5,Letter_Font_Length_Bytes*6, X_Position,Y_Position, Colour);//5
                  break;
-     case 54:    Write_Character_6(X_Position,Y_Position, Colour);
+     case 54:    Write_Character(Letter_Font_Length_Bytes*6,Letter_Font_Length_Bytes*7, X_Position,Y_Position, Colour);//6
                  break;
-     case 55:    Write_Character_7(X_Position,Y_Position, Colour);
+     case 55:    Write_Character(Letter_Font_Length_Bytes*7,Letter_Font_Length_Bytes*8, X_Position,Y_Position, Colour);//7
                  break;
-     case 56:    Write_Character_8(X_Position,Y_Position, Colour);
+     case 56:    Write_Character(Letter_Font_Length_Bytes*8,Letter_Font_Length_Bytes*9, X_Position,Y_Position, Colour);//8
                  break;
-     case 57:    Write_Character_9(X_Position,Y_Position, Colour);
+     case 57:    Write_Character(Letter_Font_Length_Bytes*9,Letter_Font_Length_Bytes*10, X_Position,Y_Position, Colour);//9
                  break;
-     case 65:    Write_Character_A(X_Position,Y_Position, Colour);
+     case 65:    Write_Character(Letter_Font_Length_Bytes*10,Letter_Font_Length_Bytes*11, X_Position,Y_Position, Colour);//A
                  break;
-     case 66:    Write_Character_B(X_Position,Y_Position, Colour);
+     case 66:    Write_Character(Letter_Font_Length_Bytes*11,Letter_Font_Length_Bytes*12,X_Position,Y_Position, Colour); //B
                  break;
-     case 67:    Write_Character_C(X_Position,Y_Position, Colour);
+     case 67:    Write_Character(Letter_Font_Length_Bytes*12,Letter_Font_Length_Bytes*13,X_Position,Y_Position, Colour); //C
                  break;
-     case 68:    Write_Character_D(X_Position,Y_Position, Colour);
+     case 68:    Write_Character(Letter_Font_Length_Bytes*13,Letter_Font_Length_Bytes*14,X_Position,Y_Position, Colour); //D
                  break;
-     case 69:    Write_Character_E(X_Position,Y_Position, Colour);
+     case 69:    Write_Character(Letter_Font_Length_Bytes*14,Letter_Font_Length_Bytes*15,X_Position,Y_Position, Colour); //E
                  break;
-     case 70:    Write_Character_F(X_Position,Y_Position, Colour);
+     case 70:    Write_Character(Letter_Font_Length_Bytes*15,Letter_Font_Length_Bytes*16,X_Position,Y_Position, Colour); //F
                  break;
-     case 71:    Write_Character_G(X_Position,Y_Position, Colour);
+     case 71:    Write_Character(Letter_Font_Length_Bytes*16,Letter_Font_Length_Bytes*17,X_Position,Y_Position, Colour);//G
                  break;
-     case 72:    Write_Character_H(X_Position,Y_Position, Colour);
+     case 72:    Write_Character(Letter_Font_Length_Bytes*17,Letter_Font_Length_Bytes*18,X_Position,Y_Position, Colour);//H
                  break;
-     case 73:    Write_Character_I(X_Position,Y_Position, Colour);
+     case 73:    Write_Character(Letter_Font_Length_Bytes*18,Letter_Font_Length_Bytes*19,X_Position,Y_Position, Colour);//I
                  break;
-     case 74:    Write_Character_J(X_Position,Y_Position, Colour);
+     case 74:    Write_Character(Letter_Font_Length_Bytes*19,Letter_Font_Length_Bytes*20,X_Position,Y_Position, Colour);//J
                  break;
-     case 75:    Write_Character_K(X_Position,Y_Position, Colour);
+     case 75:    Write_Character(Letter_Font_Length_Bytes*20,Letter_Font_Length_Bytes*21,X_Position,Y_Position, Colour);//K
                  break;
-     case 76:    Write_Character_L(X_Position,Y_Position, Colour);
+     case 76:    Write_Character(Letter_Font_Length_Bytes*21,Letter_Font_Length_Bytes*22,X_Position,Y_Position, Colour);//L
                  break;
-     case 77:    Write_Character_M(X_Position,Y_Position, Colour);
+     case 77:    Write_Character(Letter_Font_Length_Bytes*22,Letter_Font_Length_Bytes*23,X_Position,Y_Position, Colour);//M
                  break;
-     case 78:    Write_Character_N(X_Position,Y_Position, Colour);
+     case 78:    Write_Character(Letter_Font_Length_Bytes*23,Letter_Font_Length_Bytes*24,X_Position,Y_Position, Colour);//N
                  break;
-     case 79:    Write_Character_O(X_Position,Y_Position, Colour);
+     case 79:    Write_Character(Letter_Font_Length_Bytes*24,Letter_Font_Length_Bytes*25,X_Position,Y_Position, Colour);//O
                  break;
-     case 80:    Write_Character_P(X_Position,Y_Position, Colour);
+     case 80:    Write_Character(Letter_Font_Length_Bytes*25,Letter_Font_Length_Bytes*26,X_Position,Y_Position, Colour);//P
                  break;
-     case 81:    Write_Character_Q(X_Position,Y_Position, Colour);
+     case 81:    Write_Character(Letter_Font_Length_Bytes*26,Letter_Font_Length_Bytes*27,X_Position,Y_Position, Colour);//Q
                  break;
-     case 82:    Write_Character_R(X_Position,Y_Position, Colour);
+     case 82:    Write_Character(Letter_Font_Length_Bytes*27,Letter_Font_Length_Bytes*28,X_Position,Y_Position, Colour);//R
                  break;
-     case 83:    Write_Character_S(X_Position,Y_Position, Colour);
+     case 83:    Write_Character(Letter_Font_Length_Bytes*28,Letter_Font_Length_Bytes*29,X_Position,Y_Position, Colour);//S
                  break;
-     case 84:    Write_Character_T(X_Position,Y_Position, Colour);
+     case 84:    Write_Character(Letter_Font_Length_Bytes*29,Letter_Font_Length_Bytes*30,X_Position,Y_Position, Colour);//T
                  break;
-     case 85:    Write_Character_U(X_Position,Y_Position, Colour);
+     case 85:    Write_Character(Letter_Font_Length_Bytes*30,Letter_Font_Length_Bytes*31,X_Position,Y_Position, Colour);//U
                  break;
-     case 86:    Write_Character_V(X_Position,Y_Position, Colour);
+     case 86:    Write_Character(Letter_Font_Length_Bytes*31,Letter_Font_Length_Bytes*32,X_Position,Y_Position, Colour);//V
                  break;
-     case 87:    Write_Character_W(X_Position,Y_Position, Colour);
+     case 87:    Write_Character(Letter_Font_Length_Bytes*32,Letter_Font_Length_Bytes*33,X_Position,Y_Position, Colour);//W
                  break;
-     case 88:    Write_Character_X(X_Position,Y_Position, Colour);
+     case 88:    Write_Character(Letter_Font_Length_Bytes*33,Letter_Font_Length_Bytes*34,X_Position,Y_Position, Colour);//X
                  break;
-     case 89:    Write_Character_Y(X_Position,Y_Position, Colour);
+     case 89:    Write_Character(Letter_Font_Length_Bytes*34,Letter_Font_Length_Bytes*35,X_Position,Y_Position, Colour);//Y
                  break;
-     case 90:    Write_Character_Z(X_Position,Y_Position, Colour);
+     case 90:    Write_Character(Letter_Font_Length_Bytes*35,Letter_Font_Length_Bytes*36,X_Position,Y_Position, Colour);//Z
                  break;
-     case 97:    Write_Character_A(X_Position,Y_Position, Colour);
+     case 97:    Write_Character(Letter_Font_Length_Bytes*10,Letter_Font_Length_Bytes*11, X_Position,Y_Position, Colour); //A
                  break;
-     case 98:    Write_Character_B(X_Position,Y_Position, Colour);
+     case 98:    Write_Character(Letter_Font_Length_Bytes*11,Letter_Font_Length_Bytes*12,X_Position,Y_Position, Colour); //B
                  break;
-     case 99:    Write_Character_C(X_Position,Y_Position, Colour);
+     case 99:    Write_Character(Letter_Font_Length_Bytes*12,Letter_Font_Length_Bytes*13,X_Position,Y_Position, Colour); //C
                  break;
-     case 100:   Write_Character_D(X_Position,Y_Position, Colour);
+     case 100:   Write_Character(Letter_Font_Length_Bytes*13,Letter_Font_Length_Bytes*14,X_Position,Y_Position, Colour); //D
                  break;
-     case 101:   Write_Character_E(X_Position,Y_Position, Colour);
+     case 101:   Write_Character(Letter_Font_Length_Bytes*14,Letter_Font_Length_Bytes*15,X_Position,Y_Position, Colour); //E
                  break;
-     case 102:   Write_Character_F(X_Position,Y_Position, Colour);
+     case 102:   Write_Character(Letter_Font_Length_Bytes*15,Letter_Font_Length_Bytes*16,X_Position,Y_Position, Colour); //F
                  break;
-     case 103:   Write_Character_G(X_Position,Y_Position, Colour);
+     case 103:   Write_Character(Letter_Font_Length_Bytes*16,Letter_Font_Length_Bytes*17,X_Position,Y_Position, Colour);//G
                  break;
-     case 104:   Write_Character_H(X_Position,Y_Position, Colour);
+     case 104:   Write_Character(Letter_Font_Length_Bytes*17,Letter_Font_Length_Bytes*18,X_Position,Y_Position, Colour);//H
                  break;
-     case 105:   Write_Character_I(X_Position,Y_Position, Colour);
+     case 105:   Write_Character(Letter_Font_Length_Bytes*18,Letter_Font_Length_Bytes*19,X_Position,Y_Position, Colour);//I
                  break;
-     case 106:   Write_Character_J(X_Position,Y_Position, Colour);
+     case 106:   Write_Character(Letter_Font_Length_Bytes*19,Letter_Font_Length_Bytes*20,X_Position,Y_Position, Colour);//J
                  break;
-     case 107:   Write_Character_K(X_Position,Y_Position, Colour);
+     case 107:   Write_Character(Letter_Font_Length_Bytes*20,Letter_Font_Length_Bytes*21,X_Position,Y_Position, Colour);//K
                  break;
-     case 108:   Write_Character_L(X_Position,Y_Position, Colour);
+     case 108:   Write_Character(Letter_Font_Length_Bytes*21,Letter_Font_Length_Bytes*22,X_Position,Y_Position, Colour);//L
                  break;
-     case 109:   Write_Character_M(X_Position,Y_Position, Colour);
+     case 109:   Write_Character(Letter_Font_Length_Bytes*22,Letter_Font_Length_Bytes*23,X_Position,Y_Position, Colour);//M
                  break;
-     case 110:   Write_Character_N(X_Position,Y_Position, Colour);
+     case 110:   Write_Character(Letter_Font_Length_Bytes*23,Letter_Font_Length_Bytes*24,X_Position,Y_Position, Colour);//N
                  break;
-     case 111:   Write_Character_O(X_Position,Y_Position, Colour);
+     case 111:   Write_Character(Letter_Font_Length_Bytes*24,Letter_Font_Length_Bytes*25,X_Position,Y_Position, Colour);//O
                  break;
-     case 112:   Write_Character_P(X_Position,Y_Position, Colour);
+     case 112:   Write_Character(Letter_Font_Length_Bytes*25,Letter_Font_Length_Bytes*26,X_Position,Y_Position, Colour);//P
                  break;
-     case 113:   Write_Character_Q(X_Position,Y_Position, Colour);
+     case 113:   Write_Character(Letter_Font_Length_Bytes*26,Letter_Font_Length_Bytes*27,X_Position,Y_Position, Colour);//Q
                  break;
-     case 114:   Write_Character_R(X_Position,Y_Position, Colour);
+     case 114:   Write_Character(Letter_Font_Length_Bytes*27,Letter_Font_Length_Bytes*28,X_Position,Y_Position, Colour);//R
                  break;
-     case 115:   Write_Character_S(X_Position,Y_Position, Colour);
+     case 115:   Write_Character(Letter_Font_Length_Bytes*28,Letter_Font_Length_Bytes*29,X_Position,Y_Position, Colour);//S
                  break;
-     case 116:   Write_Character_T(X_Position,Y_Position, Colour);
+     case 116:   Write_Character(Letter_Font_Length_Bytes*29,Letter_Font_Length_Bytes*30,X_Position,Y_Position, Colour);//T
                  break;
-     case 117:   Write_Character_U(X_Position,Y_Position, Colour);
+     case 117:   Write_Character(Letter_Font_Length_Bytes*30,Letter_Font_Length_Bytes*31,X_Position,Y_Position, Colour);//U
                  break;
-     case 118:   Write_Character_V(X_Position,Y_Position, Colour);
+     case 118:   Write_Character(Letter_Font_Length_Bytes*31,Letter_Font_Length_Bytes*32,X_Position,Y_Position, Colour);//V
                  break;
-     case 119:   Write_Character_W(X_Position,Y_Position, Colour);
+     case 119:   Write_Character(Letter_Font_Length_Bytes*32,Letter_Font_Length_Bytes*33,X_Position,Y_Position, Colour);//W
                  break;
-     case 120:   Write_Character_X(X_Position,Y_Position, Colour);
+     case 120:   Write_Character(Letter_Font_Length_Bytes*33,Letter_Font_Length_Bytes*34,X_Position,Y_Position, Colour);//X
                  break;
-     case 121:   Write_Character_Y(X_Position,Y_Position, Colour);
+     case 121:   Write_Character(Letter_Font_Length_Bytes*34,Letter_Font_Length_Bytes*35,X_Position,Y_Position, Colour);//Y
                  break;
-     case 122:   Write_Character_Z(X_Position,Y_Position, Colour);
+     case 122:   Write_Character(Letter_Font_Length_Bytes*35,Letter_Font_Length_Bytes*36,X_Position,Y_Position, Colour);//Z
                  break;
      default:    Write_Character_Space(X_Position,Y_Position, Colour);
                  break;
@@ -3342,13 +2572,8 @@ void Get_Files(){
        ypos +=31;
        File_Number++;
       }
-
-     Delay_ms(500);
-
-     File_Number = 1;  //<<<<<<<<<<<<<<<<<<<<<<<<<
-     Read_Sector(512* Actual_Sector[File_Number]);  //ACTUAL SECTOR WHERE PICTURE STARTS, NOT THE SAME AS START OF FILE. --- THIS IS READING THE BITMAP HEADER
-
-
+      Delay_ms(500);
+      File_Number = 1;  //<<<<<<<<<<<<<<<<<<<<<<<<< Reset File Number To 1
 }
 
 void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Number){
@@ -3373,7 +2598,7 @@ void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Numb
      Byte4 = Byte4<<16;
      Byte5 = dataBuffer[5];
      Byte5 = Byte5<<24;
-     File.TotalFileSize = Byte5 + Byte4 + Byte3 + Byte2;          //Does what it says
+     File.TotalFileSize = Byte5 + Byte4 + Byte3 + Byte2;        //Does what it says
      Byte10 = dataBuffer[10];
      Byte11 = dataBuffer[11];
      Byte11 = Byte11<<8;
@@ -3381,7 +2606,7 @@ void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Numb
      Byte12 = Byte12<<16;
      Byte13 = dataBuffer[13];
      Byte13 = Byte13<<24;
-     Image_Data_Starts_At = Byte13 + Byte12 + Byte11 + Byte10;  //  Does what it says
+     Image_Data_Starts_At = Byte13 + Byte12 + Byte11 + Byte10;  //Does what it says
      Byte18 = dataBuffer[18];
      Byte19 = dataBuffer[19];
      Byte19 = Byte19<<8;
@@ -3390,36 +2615,36 @@ void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Numb
      Sectors_To_Read = File.TotalFileSize / 512;
      Bytes_Left_To_Read = File.TotalFileSize %512;
 
-      if(Bytes_Left_To_Read>0){
+     if(Bytes_Left_To_Read>0){
         Sectors_To_Read +=1;  //   Sectors_To_Read = Sectors_To_Read+1;
-       }
+      }
 
-      TFT_CS = 0;
-      Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register
-      Write_Data_EpsonS1D13517(Memory_Buffer_Number<<4 | 0b0000);  //WORKS FOR Single buffers not PIP  bit 3 is Transparency
-      //REGISTERS AUTO-INCREMENT !
-      Write_Command_EpsonS1D13517(0x5A);    //set window for x start
-      Write_Data_EpsonS1D13517(0);          //X START REGISTER
-      Write_Data_EpsonS1D13517(0);          //Y START REGISTER ZER0
-      Write_Data_EpsonS1D13517(0);          //Y START REGISTER 1
-      Write_Data_EpsonS1D13517(0xC6);       //X END POSITION
-      Write_Data_EpsonS1D13517(0x77);       //Y END POSITION REGISTER ZER0
-      Write_Data_EpsonS1D13517(0x03);       //Y END POSITION REGISTER 1
+     TFT_CS = 0;
+     Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register
+     Write_Data_EpsonS1D13517(Memory_Buffer_Number<<4 | 0b0000);  //WORKS FOR Single buffers not PIP  bit 3 is Transparency
+     //REGISTERS AUTO-INCREMENT !
+     Write_Command_EpsonS1D13517(0x5A);    //set window for x start
+     Write_Data_EpsonS1D13517(0);          //X START REGISTER
+     Write_Data_EpsonS1D13517(0);          //Y START REGISTER ZER0
+     Write_Data_EpsonS1D13517(0);          //Y START REGISTER 1
+     Write_Data_EpsonS1D13517(0xC6);       //X END POSITION
+     Write_Data_EpsonS1D13517(0x77);       //Y END POSITION REGISTER ZER0
+     Write_Data_EpsonS1D13517(0x03);       //Y END POSITION REGISTER 1
 
-      for(i=0; i<Sectors_To_Read; i++){
-          Read_Sector(512 * Actual_Sector);
+     for(i=0; i<Sectors_To_Read; i++){
+       Read_Sector(512 * Actual_Sector);
           
-         if(i==Sectors_To_Read-1){
-           Max_Bytes = Bytes_Left_To_Read-2;
-          }
-          
-         for(x = Image_Data_Starts_At; x<Max_Bytes; x=x+2){
-           PMDIN = dataBuffer[x] | dataBuffer[x+1]<<8;
-          }
-          Actual_Sector++;
-          Image_Data_Starts_At = 0;
+       if(i==Sectors_To_Read-1){
+         Max_Bytes = Bytes_Left_To_Read-2;
         }
-        TFT_CS = 1;
+          
+       for(x = Image_Data_Starts_At; x<Max_Bytes; x=x+2){
+         PMDIN = dataBuffer[x] | dataBuffer[x+1]<<8;
+        }
+        Actual_Sector++;
+        Image_Data_Starts_At = 0;
+      }
+      TFT_CS = 1;
 }
 
 void Show_Picture_In_Picture(){
@@ -3527,19 +2752,19 @@ void main() {
      
      //Write_Picture(1);
     
-   /*TFT_CS = 0;
-   //COLOUR TEST BARS, UN-COMMENT TO USE////////////////COLOUR TEST BARS, UN-COMMENT TO USE.
-   Write_Command_EpsonS1D13517(0x2A);    //Display Mode Register PAGE 64 & 66
-   Write_Data_EpsonS1D13517(0b00001111); // PAGE 66  COLOUR BAR   PAGE 123
-   Write_Command_EpsonS1D13517(0x50);    // REG[50h] Display Control Register PAGE 72
-   Write_Data_EpsonS1D13517(0x80);       //Bit 7 Must Be Set To Update Display
-   TFT_CS = 1;*/
-   //The Test Color Bar Display Does Not Use The Sdram Memory And Is Selected When Reg[2Ah] Bits 3-1 = 111b
+     /*TFT_CS = 0;
+     //COLOUR TEST BARS, UN-COMMENT TO USE////////////////COLOUR TEST BARS, UN-COMMENT TO USE.
+     Write_Command_EpsonS1D13517(0x2A);    //Display Mode Register PAGE 64 & 66
+     Write_Data_EpsonS1D13517(0b00001111); // PAGE 66  COLOUR BAR   PAGE 123
+     Write_Command_EpsonS1D13517(0x50);    // REG[50h] Display Control Register PAGE 72
+     Write_Data_EpsonS1D13517(0x80);       //Bit 7 Must Be Set To Update Display
+     TFT_CS = 1;*/
+     //The Test Color Bar Display Does Not Use The Sdram Memory And Is Selected When Reg[2Ah] Bits 3-1 = 111b
 
-   //SET RS LINE HC/C# LOW FOR COMMAND
-   //SET RS LINE HD/C# HIGH FOR DATA
-   //Display Functions PAGE 112  WRITING TO THE CONTROLLER
-   
+     //SET RS LINE HC/C# LOW FOR COMMAND
+     //SET RS LINE HD/C# HIGH FOR DATA
+     //Display Functions PAGE 112  WRITING TO THE CONTROLLER
+
     while(Memory_buffer<13){
 
       Delay_ms(100);
