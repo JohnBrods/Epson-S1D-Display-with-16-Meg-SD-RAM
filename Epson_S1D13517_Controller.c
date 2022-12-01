@@ -1,7 +1,7 @@
                                                     /*Anyone is free to copy, modify, publish, use, compile or
                                                     distribute this software, either in source code form or as a compiled
                                                     binary, for non-commercial use only. (i.e. YOU MAY NOT SELL IT)
-                                                    John B 30/11/2022
+                                                    John B 1/12/2022
                                                     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
                                                     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
                                                     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -12,9 +12,10 @@
                                                     //This C file contains my everything to get a Seiko Epson S1D13517-
                                                     //Display Controller to work with a 24 bit colour LCD, 800x480 LCD.
                                                     //Initialise_SDCARD & Read pictures, no library required. It will load 13-
-                                                    // pictures into the S DRAM then display them from the memory.
+                                                    // pictures into the SDRAM then display them from the memory.
                                                     //Demonstrated on YouTube 30/11/22.
                                                     //Another First of it's kind on YouTube.
+                                                    //Inproved Text Message For Whole Program 1st December 2022
 
 //Started Epson Programming 18:30 11/November 2022
 
@@ -501,9 +502,9 @@ void Init_MCU() {
 unsigned int Background_Colour;
 void Clear_Screen_S1D13517(unsigned int Colour){
 
-     static unsigned long i;
-     TFT_CS = 0;
-     Background_Colour = 0x00 | Colour;
+    static unsigned long i;
+    TFT_CS = 0;
+    Background_Colour = 0x00 | Colour;
 
     Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register  BITS 7,6,5,4 ARE INPUT BUFFER NUMBERS 1 TO 16
     Write_Data_EpsonS1D13517(0b00000000); //  Buffer 0  WORKS FOR MAIN WINDOW ONLY
@@ -2655,8 +2656,11 @@ unsigned int Number_Start_x = 350;
 unsigned char Font_Height = 34;
 
 void Show_Boot_information(){
-
-    Get_Boot_Information();
+    unsigned char Message[]  = "Root Directory";
+    unsigned char xpos_Start = 120;
+    unsigned char ypos = 300;
+    unsigned char x;
+   // Get_Boot_Information();
 
     Clear_Screen_S1D13517(Black);
     Write_Number(Number_of_Root_Directory_Entries,2,Font_Height,White);
@@ -2677,10 +2681,10 @@ void Show_Boot_information(){
     Write_Number(Cluster_Size,2,Font_Height*8,White);
     //"Cluster Size   ="
     Write_Number(Root_Directory,2,Font_Height*9,White);
-    Write_Character_R(120,Font_Height*9+8, Red);
-    Write_Character_O(150,Font_Height*9+8, Red);
-    Write_Character_O(180,Font_Height*9+8, Red);
-    Write_Character_T(210,Font_Height*9+8, Red);
+    
+    for(x=0; x<15; x++){
+     Display_Character(Message[x],xpos_Start+Letter_Font_Width*x,Font_Height*9+8,Red);   //ROOT DIRECTORY
+    }
     Delay_ms(500);
  }
 
@@ -2728,7 +2732,6 @@ void Set_Bus_Speeds(){
     CFGCONbits.ECCCON = 3;
 
     SYSKEY = 0x00;
-
 }
 
 
@@ -2762,10 +2765,21 @@ unsigned int sdcardbuffer_X_position = 30;
 unsigned int sdcardbuffer_Y_position = 30;
 unsigned char Counter = 0;
 unsigned char File_Type = 3;    //  FAT16 = 3
+unsigned int Colour = White;
 
 void Initialise_SDCARD(){
 
+      unsigned char Message[]  = "FAT_16_Initialised";
+      unsigned char Message1[] = "CMD 41 INIT";
+      unsigned char Message2[] = "CMD 58 INIT";
+      unsigned char Message3[] = "CMD 16 INIT";
+      unsigned char Message4[] = "CMD 17 INIT";
+      unsigned char Message5[] = "Wrong File Type Adjusting Up";
+      unsigned char Message6[] = "Wrong File Type Adjusting Down";
+      unsigned char Message7[] = "Wrong Type SD Card";
       unsigned int x = 0;
+      unsigned int xpos_Start = 50;
+      unsigned int ypos = 20;
       unsigned char junkBuffer[8];
       unsigned char loop8;
       unsigned char loop55;
@@ -2791,7 +2805,7 @@ void Initialise_SDCARD(){
       SPI3_Write(0x00);
       SPI3_Write(0x00);
       SPI3_Write(0x95);       //0x95 Is Checksum For Software Reset
-      SPI3CONbits.DISSDO = 1; //TURNS OFF SERIAL DATA OUT           PAGE 24 SPI DATA SHEET   control bit (SPIxCON<12>)  23.3.5SPI Receive-Only Operation
+      SPI3CONbits.DISSDO = 1; //TURNS OFF SERIAL DATA OUT
       SPI3_Write(0xFF);       // COMMAND RESPONSE TIME (NCR).
       SD_Card_Chip_Select = 1;
 
@@ -2806,7 +2820,7 @@ void Initialise_SDCARD(){
       while(Boot_SectorBuffer[0] <1);
 
       Delay_ms(200);           //TIME FOR SD CARD
-      //Clear_Screen_SSD1963(Blue);
+
       Counter = 0;
       loop8:
       SPI3CONbits.DISSDO = 0;  //TURNS ON SERIAL DATA OUT
@@ -2818,7 +2832,7 @@ void Initialise_SDCARD(){
       SPI3_Write(0xAA);
       SPI3_Write(0x87);        //Checksum
       SPI3CONbits.DISSDO = 1;  //TURNS OFF SERIAL DATA OUT
-      SPI3_Write(0xFF);        //Command Response Time (NCR). <<<<<<<WEEKS OF WORK FOR THIS LITTLE SHIT<<<<<<<<<AT LEAST ONE NCR INSIDE THE CHIP SELECT<<<<<<<<<<<<
+      SPI3_Write(0xFF);        //Command Response Time (NCR).
       SD_Card_Chip_Select =1;
       SPI3_Write(0xFF);        //Command Response Time (NCR).
 
@@ -2829,7 +2843,7 @@ void Initialise_SDCARD(){
       SD_Card_Chip_Select = 1;
       Delay_ms(10);
 
-      if(Boot_SectorBuffer[0] == 0){ // THIS HAS TAKEN MONTHS OF WORK TO GET HERE.
+      if(Boot_SectorBuffer[0] == 0){
         Counter = 0;
        }
 
@@ -2841,15 +2855,10 @@ void Initialise_SDCARD(){
          }
        }
 
-      /*Write_Number(Boot_SectorBuffer[0],sdcardbuffer_X_position,sdcardbuffer_Y_position,White);
-      Write_Number(Boot_SectorBuffer[1],sdcardbuffer_X_position,sdcardbuffer_Y_position+30,White);
-      Write_Number(Boot_SectorBuffer[2],sdcardbuffer_X_position,sdcardbuffer_Y_position+60,White);
-      Write_Number(Boot_SectorBuffer[3],sdcardbuffer_X_position,sdcardbuffer_Y_position+90,White);
-      Write_Number(8,sdcardbuffer_X_position+250,sdcardbuffer_Y_position,Black);
-      Delay_ms(800);*/
+      Delay_ms(1);
 
       loop55:
-      //Clear_Screen_SSD1963(Lavenderblush);
+
       SD_Card_Chip_Select = 0;
       SPI3_Write(CMD55);  //     PAGE 59 OF SD CARD ASSOCIATION STATES THAT COMMAND 55 SHALL ALWAYS PRECEDE AMCD41
       SPI3_Write(0x00);
@@ -2865,14 +2874,11 @@ void Initialise_SDCARD(){
       Boot_SectorBuffer[0] = SPI3_Read(dummybuffer);
       SD_Card_Chip_Select = 1;
 
-      /*sdcardbuffer_Y_position = 30;
-      Write_Number(Boot_SectorBuffer[0],sdcardbuffer_X_position,sdcardbuffer_Y_position,White);
-      Write_Number(55,sdcardbuffer_X_position+250,sdcardbuffer_Y_position,Black);*/
       Delay_ms(10);
       Clear_Screen_S1D13517(Lavenderblush);
       SPI3CONbits.DISSDO = 0;  //TURNS ON SERIAL DATA OUT
       SD_Card_Chip_Select = 0;
-      SPI3_Write(CMD41);  //Command 41    SPI3_Write(0x69);  //Command 41      SPI3_Write(105);  ==Command 41      SPI3_Write(119); == Command 55    SPI3_Write(122);  ==Command 58
+      SPI3_Write(CMD41);  //Command 41
       SPI3_Write(0x40);
       SPI3_Write(0x00);
       SPI3_Write(0x00);
@@ -2885,8 +2891,6 @@ void Initialise_SDCARD(){
       Boot_SectorBuffer[0] = SPI3_Read(dummybuffer);
       SD_Card_Chip_Select = 1;
 
-      //Write_Number(Boot_SectorBuffer[0],sdcardbuffer_X_position,sdcardbuffer_Y_position,Black);
-      //Write_Number(41,sdcardbuffer_X_position+250,sdcardbuffer_Y_position,Black);
       Delay_ms(20);  //error in 41 if this delay is only 10 ms
 
       if(Boot_SectorBuffer[0] !=0){
@@ -2894,25 +2898,15 @@ void Initialise_SDCARD(){
          Delay_ms(1);
         if(Counter >5){
            Clear_Screen_S1D13517(Red);
-          Write_Character_C(200,30,White);
-          Write_Character_M(225,30,White);
-          Write_Character_D(250,30,White);
-          Write_Character_Space(275,30,White);
-          Write_Character_4(300,30,White);
-          Write_Character_1(325,30,White);
-          Write_Character_Space(350,30,White);
-          Write_Character_I(375,30,White);
-          Write_Character_N(400,30,White);
-          Write_Character_I(425,30,White);
-          Write_Character_T(450,30,White);
+           for(x=0; x<12; x++){
+            Display_Character(Message1[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   41   ERROR   Initialise_SDCARD"
+           }
           Delay_ms(200);
-          //"COMMAND   41   ERROR   Initialise_SDCARD"
          }
         goto loop55;
        }
        
-      InitialiseFastSPI(8); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-      //Clear_Screen_S1D13517(Green);
+      InitialiseFastSPI(8); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       loop58:
 
       SPI3CONbits.DISSDO = 0;  //TURNS ON SERIAL DATA OUT
@@ -2931,38 +2925,27 @@ void Initialise_SDCARD(){
       for(x=0; x<5; x++){
         Boot_SectorBuffer[x] = SPI3_Read(dummybuffer);
        }
-      SD_Card_Chip_Select = 1;          //  The Lower 12 Bits In The Return Value = 0x1AA Mean That The Card Is Sdc V2 And Can Work At A Voltage Range Of Between 2.7 To 3.6
+      SD_Card_Chip_Select = 1;    //The Lower 12 Bits In The Return Value = 0x1AA Mean That The Card Is Sdc V2 And Can Work At A Voltage Range Of Between 2.7 To 3.6
       Delay_ms(10);
 
       if(Boot_SectorBuffer[0] !=0){
          Counter++;
          Delay_ms(1);
         if(Counter >5){
-          Clear_Screen_S1D13517(Red);
-          Write_Character_C(200,30,White);
-          Write_Character_M(225,30,White);
-          Write_Character_D(250,30,White);
-          Write_Character_Space(275,30,White);
-          Write_Character_5(300,30,White);
-          Write_Character_8(325,30,White);
-          Write_Character_Space(350,30,White);
-          Write_Character_I(375,30,White);
-          Write_Character_N(400,30,White);
-          Write_Character_I(425,30,White);
-          Write_Character_T(450,30,White);
-          Delay_ms(500);
-          //"COMMAND   58   ERROR   Initialise_SDCARD"
+           Clear_Screen_S1D13517(Red);
+           for(x=0; x<12; x++){
+            Display_Character(Message2[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   58   ERROR   Initialise_SDCARD"
+           }
+           Delay_ms(300);
          }
-        goto loop58;
+         goto loop58;
        }
 
-      loop16:  //----------------------------------------------------------------------------
-      
-
+      loop16:  //-----------------------------------------------------------
 
       SPI3CONbits.DISSDO = 0;  //TURNS ON SERIAL DATA OUT
       SD_Card_Chip_Select = 0;
-      SPI3_Write(CMD16);  //Command 16          read block
+      SPI3_Write(CMD16);  //Command 16    read block
       SPI3_Write(0x00);
       SPI3_Write(0x00);
       SPI3_Write(0x02);
@@ -2982,19 +2965,10 @@ void Initialise_SDCARD(){
          Delay_ms(1);
         if(Counter >6){
           Clear_Screen_S1D13517(Red);
-          Write_Character_C(200,30,White);
-          Write_Character_M(225,30,White);
-          Write_Character_D(250,30,White);
-          Write_Character_Space(275,30,White);
-          Write_Character_1(300,30,White);
-          Write_Character_6(325,30,White);
-          Write_Character_Space(350,30,White);
-          Write_Character_I(375,30,White);
-          Write_Character_N(400,30,White);
-          Write_Character_I(425,30,White);
-          Write_Character_T(450,30,White);
-          Delay_ms(200);
-          //"COMMAND   16   ERROR   Initialise_SDCARD"
+          for(x=0; x<12; x++){
+            Display_Character(Message3[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   16   ERROR   Initialise_SDCARD"
+           }
+           Delay_ms(200);
          }
          goto loop16;
        }
@@ -3023,19 +2997,11 @@ void Initialise_SDCARD(){
          Delay_ms(1);
         if(Counter >5){
           Clear_Screen_S1D13517(Red);
-          Write_Character_C(200,30,White);
-          Write_Character_M(225,30,White);
-          Write_Character_D(250,30,White);
-          Write_Character_Space(275,30,White);
-          Write_Character_1(300,30,White);
-          Write_Character_7(325,30,White);
-          Write_Character_Space(350,30,White);
-          Write_Character_I(375,30,White);
-          Write_Character_N(400,30,White);
-          Write_Character_I(425,30,White);
-          Write_Character_T(450,30,White);
-          Delay_ms(200);
-          //"COMMAND   17   ERROR   Initialise_SDCARD"
+          for(x=0; x<12; x++){
+            Display_Character(Message4[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   17   ERROR   Initialise_SDCARD"
+           }
+           Delay_ms(200);
+
          }
          goto loop17;
        }
@@ -3049,7 +3015,7 @@ void Initialise_SDCARD(){
        }
 
       for(x=0; x<513; x++){
-         Boot_SectorBuffer[x] = SPI3_Read(255);     //<<<<<<<<<<<<<<DATA BUFFER HERE
+         Boot_SectorBuffer[x] = SPI3_Read(255);     //<<<<<<DATA BUFFER HERE
        }
 
       for(x=0; x<2; x++){
@@ -3060,18 +3026,11 @@ void Initialise_SDCARD(){
       sdcardbuffer_X_position = 3;
       sdcardbuffer_Y_position = 30;
 
-      if(Boot_SectorBuffer[511] !=170){     //File Type is Wrong.
+      if(Boot_SectorBuffer[511] !=170){     //
          Clear_Screen_S1D13517(Red);
-         Write_Character_A(200,30,White);
-         Write_Character_D(225,30,White);
-         Write_Character_J(250,30,White);
-         Write_Character_U(275,30,White);
-         Write_Character_S(300,30,White);
-         Write_Character_T(325,30,White);
-         Write_Character_Space(350,30,White);
-         Write_Character_U(375,30,White);
-         Write_Character_P(400,30,White);
-         //"Wrong  File  Type  Set   ADJUSTING   ++"
+         for(x=0; x<29; x++){
+          Display_Character(Message5[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"Wrong  File  Type  Set   ADJUSTING   ++"
+         }
          Delay_ms(500);
         if(Boot_SectorBuffer[512]==170){
            File_Type = File_Type +1;
@@ -3080,18 +3039,11 @@ void Initialise_SDCARD(){
          }
        }
 
-      if(Boot_SectorBuffer[511] !=170){     //File Type is Wrong.
+      if(Boot_SectorBuffer[511] !=170){     //
          Clear_Screen_S1D13517(Red);
-         Write_Character_A(200,30,White);
-         Write_Character_D(225,30,White);
-         Write_Character_J(250,30,White);
-         Write_Character_U(275,30,White);
-         Write_Character_S(300,30,White);
-         Write_Character_T(325,30,White);
-         Write_Character_Space(350,30,White);
-         Write_Character_D(375,30,White);
-         Write_Character_N(400,30,White);
-         //"Wrong  File  Type  Set   ADJUSTING   --"
+         for(x=0; x<31; x++){
+          Display_Character(Message6[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"Wrong  File  Type  Set   ADJUSTING   Down"
+         }
          Delay_ms(500);
         if(Boot_SectorBuffer[510]==170){
           File_Type = File_Type -1;
@@ -3104,16 +3056,10 @@ void Initialise_SDCARD(){
         if(Boot_SectorBuffer[510] !=170){
           if(Boot_SectorBuffer[512] !=170){
             Clear_Screen_S1D13517(Red);
-            Write_Character_W(200,30,White);
-            Write_Character_R(225,30,White);
-            Write_Character_O(250,30,White);
-            Write_Character_N(275,30,White);
-            Write_Character_G(300,30,White);
-            Write_Character_T(350,30,White);
-            Write_Character_Y(375,30,White);
-            Write_Character_P(400,30,White);
-            Write_Character_E(425,30,White);
-            Delay_ms(500);
+            for(x=0; x<19; x++){
+             Display_Character(Message7[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"Wrong Type of SD Card"
+            }
+            Delay_ms(300);
            }
          }
        }
@@ -3124,21 +3070,9 @@ void Initialise_SDCARD(){
       //TFT_Write_Text(HexString,400,60);
 
       if(Boot_SectorBuffer[54] ==70){
-        //TFT_Write_Text("FAT16   Card   Initialised",260,30);
-        Write_Character_F(200,30,White);
-        Write_Character_A(225,30,White);
-        Write_Character_T(250,30,White);
-        Write_Character_1(275,30,White);
-        Write_Character_6(300,30,White);
-        Write_Character_I(350,30,White);
-        Write_Character_N(375,30,White);
-        Write_Character_S(400,30,White);
-        Write_Character_T(425,30,White);
-        Write_Character_A(450,30,White);
-        Write_Character_L(475,30,White);
-        Write_Character_L(500,30,White);
-        Write_Character_E(525,30,White);
-        Write_Character_D(550,30,White);
+          for(x=0; x<19; x++){
+           Display_Character(Message[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //FAT 16 INITIALISED
+          }
        }
 
       //TFT_Write_Text("Boot  Signature  = ",2,60);
@@ -3153,6 +3087,9 @@ unsigned char dataBuffer[512]; //SECTOR BUFFER
 unsigned long Address2;
 void Read_Sector(unsigned long Address){
 
+    unsigned char xpos_Start = 40;
+    unsigned char ypos = 30;
+    unsigned char Message1[] = "CMD 17 Read Sector";
     unsigned char loop17;
     unsigned int x = 0;
     unsigned char junkBuffer[8];
@@ -3174,29 +3111,17 @@ void Read_Sector(unsigned long Address){
     SD_Card_Chip_Select = 0;
     junkBuffer[0] = SPI3_Read(dummybuffer);
     SD_Card_Chip_Select = 1;
-    Delay_us(600);            //<<SEEMS TO NEED THIS DELAY MICRO SECONDS, NOT MILLISECONDS
+    Delay_us(500);            //<<SEEMS TO NEED THIS DELAY MICRO SECONDS, NOT MILLISECONDS 200us will generate an error 1 dec 2022
 
     if(junkBuffer[0] !=0){
        Counter++;
        Delay_us(500);
       if(Counter >10){
          Clear_Screen_S1D13517(Red);
-        Write_Character_C(200,30,White);
-        Write_Character_M(225,30,White);
-        Write_Character_D(250,30,White);
-        Write_Character_1(275,30,White);
-        Write_Character_7(300,30,White);
-        Write_Character_R(350,30,White);
-        Write_Character_E(375,30,White);
-        Write_Character_A(400,30,White);
-        Write_Character_D(425,30,White);
-        Write_Character_Space(450,30,White);
-        Write_Character_S(475,30,White);
-        Write_Character_E(500,30,White);
-        Write_Character_C(525,30,White);
-        Write_Character_T(550,30,White);
-        Delay_ms(300);
-        //"SD   Card   Error   READ   SECTOR   CMD  17"
+         for(x=0; x<19; x++){
+           Display_Character(Message1[x],xpos_Start+Letter_Font_Width*x,ypos,Colour); //"SD   Card   Error   READ   SECTOR   CMD  17"
+         }
+         Delay_ms(300);
        }
        goto loop17;
      }
@@ -3231,7 +3156,7 @@ unsigned int  Bytes_Left_To_Read = 0;
 unsigned int  Xpos_start = 100;
 unsigned int  ypos = 20;
 unsigned int  Location = 8;
-unsigned int  Font_width = 24;
+
 unsigned char File_Number = 0;
 unsigned long SizeData31 = 0;
 unsigned long SizeData30 = 0;
@@ -3239,7 +3164,7 @@ unsigned int  SizeData29 = 0;
 unsigned char SizeData28 = 0;
 unsigned int  StartingClusterData27 = 0;
 unsigned char StartingClusterData26 = 0;
-unsigned char Colour;
+
 unsigned char FileCount = 0;
 unsigned char xpos_4_FileNumber;
 unsigned char xpos_4_Location;
@@ -3266,38 +3191,33 @@ unsigned int  Byte19;
 unsigned int  Image_Width;
 unsigned int  Sectors_To_Read = 0;
 
-void Get_Files(){
 
+void Get_Files(){
+     
+     unsigned char x = 0;
+     unsigned char Message0[] = "Sector";
+     unsigned char Message1[] = "File_Count";
+     unsigned char Message2[] = "File_Size";
+     unsigned char Message3[] = "Actual_Location_Calculator";
+     
      Sector = (512)*Root_Directory;
      Read_Sector(Sector);          //<<<<<<<<<<<<<<<<<<READ ROOT DIRECTORY TO VIEW FILES<<<<<<<<<
      Colour = White;
-
      Clear_Screen_S1D13517(Lavenderblush);
-     Display_Character(dataBuffer[0],Xpos_start,ypos,Colour);              //Display Sdcard Name
-     Display_Character(dataBuffer[1],Xpos_start+Font_width,ypos,Colour);
-     Display_Character(dataBuffer[2],Xpos_start+Font_width*2,ypos,Colour);
-     Display_Character(dataBuffer[3],Xpos_start+Font_width*3,ypos,Colour);
-     Display_Character(dataBuffer[4],Xpos_start+Font_width*4,ypos,Colour);
-     Display_Character(dataBuffer[5],Xpos_start+Font_width*5,ypos,Colour);
-     Display_Character(dataBuffer[6],Xpos_start+Font_width*6,ypos,Colour);
-     Display_Character(dataBuffer[7],Xpos_start+Font_width*7,ypos,Colour);
-     Display_Character(dataBuffer[8],Xpos_start+Font_width*8,ypos,Colour);
-     Display_Character(dataBuffer[9],Xpos_start+Font_width*9,ypos,Colour);
-     Display_Character(dataBuffer[10],Xpos_start+Font_width*10,ypos,Colour);
-     Display_Character(dataBuffer[11],Xpos_start+Font_width*11,ypos,Colour);
-
+     
+     for(x=0; x<12; x++){
+      Display_Character(dataBuffer[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //Display Sdcard Name
+     }
+     
      //////////////////////////////////////////////////////////////////////////////////////////////
      Delay_ms(300);
      Clear_Screen_S1D13517(Lavenderblush);
      Xpos_start = 450;
-     Write_Character_S(Xpos_start,ypos,Colour);
-     Write_Character_E(Xpos_start+Font_width,ypos,Colour);   //SECTOR NUMBER
-     Write_Character_C(Xpos_start+Font_width*2,ypos,Colour);
-     Write_Character_T(Xpos_start+Font_width*3,ypos,Colour);
-     Write_Character_O(Xpos_start+Font_width*4,ypos,Colour);
-     Write_Character_R(Xpos_start+Font_width*5,ypos,Colour);
-     Write_Number(Sector/512,Xpos_start+Font_width*7,ypos,Black);
-
+     
+     for(x=0; x<7; x++){
+       Display_Character(Message0[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //SECTOR
+      }
+     Write_Number(Sector/512,Xpos_start+Letter_Font_Width*7,ypos,Black);            //SECTOR NUMBER
      Xpos_start = 20;
      ypos = 8;
      Location=128;   // jumps over system info
@@ -3309,19 +3229,11 @@ void Get_Files(){
          if(dataBuffer[Location+8] ==66 && dataBuffer[Location+9] ==77){
 
            Write_Number(Location,340,ypos,Blue);
-           Display_Character(dataBuffer[Location],Xpos_start,ypos,Colour);       //SHORT NAMES ARE ALWAYS CONVERTED TO UPPER CASE
-           Display_Character(dataBuffer[Location+1],Xpos_start+Font_width,ypos,Colour);
-           Display_Character(dataBuffer[Location+2],Xpos_start+Font_width*2,ypos,Colour);
-           Display_Character(dataBuffer[Location+3],Xpos_start+Font_width*3,ypos,Colour);
-           Display_Character(dataBuffer[Location+4],Xpos_start+Font_width*4,ypos,Colour);
-           Display_Character(dataBuffer[Location+5],Xpos_start+Font_width*5,ypos,Colour);
-           Display_Character(dataBuffer[Location+6],Xpos_start+Font_width*6,ypos,Colour);
-           Display_Character(dataBuffer[Location+7],Xpos_start+Font_width*7,ypos,Colour);
-           Display_Character(dataBuffer[Location+8],Xpos_start+Font_width*8,ypos,Colour);
-           Display_Character(dataBuffer[Location+9],Xpos_start+Font_width*9,ypos,Colour);
-           Display_Character(dataBuffer[Location+10],Xpos_start+Font_width*10,ypos,Colour);
-           Display_Character(dataBuffer[Location+11],Xpos_start+Font_width*11,ypos,Colour);
-
+           
+           for(x=0; x<12; x++){
+             Display_Character(dataBuffer[Location+x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //SHORT NAMES ARE ALWAYS CONVERTED TO UPPER CASE
+            }
+            
            ypos +=28;
            File_Number++;
            if(dataBuffer[Location+10] ==80) {  //P
@@ -3347,13 +3259,11 @@ void Get_Files(){
       Location = 0;
       ypos = 300;
       Xpos_start = 450;
-      Write_Character_S(Xpos_start,ypos,Colour);
-      Write_Character_E(Xpos_start+Font_width,ypos,Colour);   //SECTOR NUMBER
-      Write_Character_C(Xpos_start+Font_width*2,ypos,Colour);
-      Write_Character_T(Xpos_start+Font_width*3,ypos,Colour);
-      Write_Character_O(Xpos_start+Font_width*4,ypos,Colour);
-      Write_Character_R(Xpos_start+Font_width*5,ypos,Colour);
-      Write_Number(Sector/512,Xpos_start+Font_width*7,ypos,Black);
+      
+      for(x=0; x<7; x++){
+       Display_Character(Message0[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //SECTOR
+      }
+      Write_Number(Sector/512,Xpos_start+Number_Font_Width*7,ypos,Black);           //SECTOR NUMBER
       Xpos_start = 20;
       ypos = 150;
 
@@ -3364,18 +3274,10 @@ void Get_Files(){
          if(dataBuffer[Location+8] ==66 && dataBuffer[Location+9] ==77){
 
            Write_Number(Location,340,ypos,Blue);
-           Display_Character(dataBuffer[Location],Xpos_start,ypos,Colour);      //SHORT NAMES ARE ALWAYS CONVERTED TO UPPER CASE
-           Display_Character(dataBuffer[Location+1],Xpos_start+Font_width,ypos,Colour);
-           Display_Character(dataBuffer[Location+2],Xpos_start+Font_width*2,ypos,Colour);
-           Display_Character(dataBuffer[Location+3],Xpos_start+Font_width*3,ypos,Colour);
-           Display_Character(dataBuffer[Location+4],Xpos_start+Font_width*4,ypos,Colour);
-           Display_Character(dataBuffer[Location+5],Xpos_start+Font_width*5,ypos,Colour);
-           Display_Character(dataBuffer[Location+6],Xpos_start+Font_width*6,ypos,Colour);
-           Display_Character(dataBuffer[Location+7],Xpos_start+Font_width*7,ypos,Colour);
-           Display_Character(dataBuffer[Location+8],Xpos_start+Font_width*8,ypos,Colour);
-           Display_Character(dataBuffer[Location+9],Xpos_start+Font_width*9,ypos,Colour);
-           Display_Character(dataBuffer[Location+10],Xpos_start+Font_width*10,ypos,Colour);
-           Display_Character(dataBuffer[Location+11],Xpos_start+Font_width*11,ypos,Colour);
+           
+           for(x=0; x<12; x++){
+             Display_Character(dataBuffer[Location+x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //SHORT NAMES ARE ALWAYS CONVERTED TO UPPER CASE
+            }
 
            ypos +=28;
            File_Number++;
@@ -3396,31 +3298,18 @@ void Get_Files(){
       }
 
      ypos +=10;
-     Write_Character_F(Xpos_start,ypos,Colour);   //FILE COUNT
-     Write_Character_I(Xpos_start+Font_width,ypos,Colour);
-     Write_Character_L(Xpos_start+Font_width*2,ypos,Colour);
-     Write_Character_E(Xpos_start+Font_width*3,ypos,Colour);
-     Write_Character_Space(Xpos_start+Font_width*4,ypos,Colour);
-     Write_Character_C(Xpos_start+Font_width*5,ypos,Colour);
-     Write_Character_O(Xpos_start+Font_width*6,ypos,Colour);
-     Write_Character_U(Xpos_start+Font_width*7,ypos,Colour);
-     Write_Character_N(Xpos_start+Font_width*8,ypos,Colour);
-     Write_Character_T(Xpos_start+Font_width*9,ypos,Colour);
-
+     
+     for(x=0; x<11; x++){
+       Display_Character(Message1[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //FILE COUNT
+      }
      FileCount = File_Number;
      Write_Number(File_Number,340,ypos,Yellow);
      ypos +=32;
-     Write_Character_F(Xpos_start,ypos,Colour);   //FILE SIZE
-     Write_Character_I(Xpos_start+Font_width,ypos,Colour);
-     Write_Character_L(Xpos_start+Font_width*2,ypos,Colour);
-     Write_Character_E(Xpos_start+Font_width*3,ypos,Colour);
-     Write_Character_Space(Xpos_start+Font_width*4,ypos,Colour);
-     Write_Character_S(Xpos_start+Font_width*5,ypos,Colour);
-     Write_Character_I(Xpos_start+Font_width*6,ypos,Colour);
-     Write_Character_Z(Xpos_start+Font_width*7,ypos,Colour);
-     Write_Character_E(Xpos_start+Font_width*8,ypos,Colour);
-
-     Write_Number(File.TotalFileSize,340,ypos,Lime);
+     
+      for(x=0; x<10; x++){
+       Display_Character(Message2[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);    //FILE SIZE
+      }
+     Write_Number(File.TotalFileSize,340,ypos,Lime);                          //FILE SIZE NUMBER
      Delay_ms(400);
      while(FileCount==0);
      //////////////////////////////////////
@@ -3430,41 +3319,13 @@ void Get_Files(){
      xpos_4_Actual_Start_Sector = 500;
      File_Number = 1;
      ypos = 2;
+     Xpos_start = 70;
 
      Clear_Screen_S1D13517(Black);
-     Write_Character_A(Xpos_start,ypos,Colour);   //ACTUAL SECTOR LOCATION INFO
-     Write_Character_C(Xpos_start+Font_width,ypos,Colour);
-     Write_Character_T(Xpos_start+Font_width*2,ypos,Colour);
-     Write_Character_U(Xpos_start+Font_width*3,ypos,Colour);
-     Write_Character_A(Xpos_start+Font_width*4,ypos,Colour);
-     Write_Character_L(Xpos_start+Font_width*5,ypos,Colour);
-     Write_Character_Space(Xpos_start+Font_width*6,ypos,Colour);
-     Write_Character_L(Xpos_start+Font_width*7,ypos,Colour);
-     Write_Character_0(Xpos_start+Font_width*8,ypos,Colour);
-     Write_Character_C(Xpos_start+Font_width*9,ypos,Colour);
-     Write_Character_A(Xpos_start+Font_width*10,ypos,Colour);
-     Write_Character_T(Xpos_start+Font_width*11,ypos,Colour);
-     Write_Character_I(Xpos_start+Font_width*12,ypos,Colour);
-     Write_Character_O(Xpos_start+Font_width*13,ypos,Colour);
-     Write_Character_N(Xpos_start+Font_width*14,ypos,Colour);
-
-     Write_Character_S(Xpos_start+Font_width*16,ypos,Colour);
-     Write_Character_E(Xpos_start+Font_width*17,ypos,Colour);
-     Write_Character_C(Xpos_start+Font_width*18,ypos,Colour);
-     Write_Character_T(Xpos_start+Font_width*19,ypos,Colour);
-     Write_Character_O(Xpos_start+Font_width*20,ypos,Colour);
-     Write_Character_R(Xpos_start+Font_width*21,ypos,Colour);
-     Write_Character_Space(Xpos_start+Font_width*22,ypos,Colour);
-     Write_Character_C(Xpos_start+Font_width*23,ypos,Colour);
-     Write_Character_A(Xpos_start+Font_width*24,ypos,Colour);
-     Write_Character_L(Xpos_start+Font_width*25,ypos,Colour);
-     Write_Character_C(Xpos_start+Font_width*26,ypos,Colour);
-     Write_Character_U(Xpos_start+Font_width*27,ypos,Colour);
-     Write_Character_L(Xpos_start+Font_width*28,ypos,Colour);
-     Write_Character_A(Xpos_start+Font_width*29,ypos,Colour);
-     Write_Character_T(Xpos_start+Font_width*30,ypos,Colour);
-     Write_Character_O(Xpos_start+Font_width*31,ypos,Colour);
-     Write_Character_R(Xpos_start+Font_width*32,ypos,Colour);
+     
+     for(x=0; x<27; x++){
+       Display_Character(Message3[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //ACTUAL SECTOR LOCATION CALCULATOR
+      }
      ypos +=32;
 
      for(x=0; x<FileCount; x++){
@@ -3487,64 +3348,23 @@ void Get_Files(){
      File_Number = 1;  //<<<<<<<<<<<<<<<<<<<<<<<<<
      Read_Sector(512* Actual_Sector[File_Number]);  //ACTUAL SECTOR WHERE PICTURE STARTS, NOT THE SAME AS START OF FILE. --- THIS IS READING THE BITMAP HEADER
 
-     if(dataBuffer[0] ==66){                        //CONFIRMS BIT ZERO AND BIT 1 = BM FOR BITMAP
+
+}
+
+void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Number){
+
+     unsigned char Message4[] = "Not_A_Bitmap";
+     Max_Bytes = 512;
+     Read_Sector(512 * Actual_Sector);  //ACTUAL SECTOR WHERE PICTURE STARTS, NOT THE SAME AS START OF FILE. THIS IS READING THE BITMAP HEADER
+     
+      if(dataBuffer[0] ==66){                        //CONFIRMS BIT ZERO AND BIT 1 = BM FOR BITMAP
        if(dataBuffer[1] ==77){
       }}else { Clear_Screen_S1D13517(Red);
                Delay_ms(300);
-               Write_Character_N(Xpos_start,ypos,Colour);   //NOT BITMAP
-               Write_Character_O(Xpos_start+Font_width,ypos,Colour);
-               Write_Character_T(Xpos_start+Font_width*2,ypos,Colour);
-               Write_Character_Space(Xpos_start+Font_width*3,ypos,Colour);
-               Write_Character_B(Xpos_start+Font_width*4,ypos,Colour);
-               Write_Character_I(Xpos_start+Font_width*5,ypos,Colour);
-               Write_Character_T(Xpos_start+Font_width*6,ypos,Colour);
-               Write_Character_M(Xpos_start+Font_width*7,ypos,Colour);
-               Write_Character_A(Xpos_start+Font_width*8,ypos,Colour);
-               Write_Character_P(Xpos_start+Font_width*9,ypos,Colour);
+               for(x=0; x<13; x++){
+                 Display_Character(Message4[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);  //NOT A BITMAP
+                }
               }
-
-
-     Byte2 = dataBuffer[2];
-     Byte3 = dataBuffer[3];
-     Byte3 = Byte3<<8;
-     Byte4 = dataBuffer[4];
-     Byte4 = Byte4<<16;
-     Byte5 = dataBuffer[5];
-     Byte5 = Byte5<<24;
-     File.TotalFileSize = Byte5 + Byte4 + Byte3 + Byte2;          //Does what it says
-     Byte10 = dataBuffer[10];
-     Byte11 = dataBuffer[11];
-     Byte11 = Byte11<<8;
-     Byte12 = dataBuffer[12];
-     Byte12 = Byte12<<16;
-     Byte13 = dataBuffer[13];
-     Byte13 = Byte13<<24;
-     Image_Data_Starts_At = Byte13 + Byte12 + Byte11 + Byte10;  //  Does what it says
-     Byte18 = dataBuffer[18];
-     Byte19 = dataBuffer[19];
-     Byte19 = Byte19<<8;
-     Image_Width = Byte19 + Byte18;
-
-     Sectors_To_Read = File.TotalFileSize / 512;
-     Bytes_Left_To_Read = File.TotalFileSize %512;
-
-     if(Bytes_Left_To_Read>0){
-        Sectors_To_Read +=1;  //   Sectors_To_Read = Sectors_To_Read+1;
-      }
-}
-
-
-
-
-
-//void Show_Picture(unsigned char File_Num){
-void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Number){
-
-
-     unsigned long xxx = 0;
-    // Memory_Buffer_Number = Memory_Buffer_Number<<4;
-     Max_Bytes = 512;
-     Read_Sector(512 * Actual_Sector);  //ACTUAL SECTOR WHERE PICTURE STARTS, NOT THE SAME AS START OF FILE. THIS IS READING THE BITMAP HEADER
 
      Byte2 = dataBuffer[2];
      Byte3 = dataBuffer[3];
@@ -3577,7 +3397,7 @@ void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Numb
       TFT_CS = 0;
       Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register
       Write_Data_EpsonS1D13517(Memory_Buffer_Number<<4 | 0b0000);  //WORKS FOR Single buffers not PIP  bit 3 is Transparency
-       //REGISTERS AUTO-INCREMENT !
+      //REGISTERS AUTO-INCREMENT !
       Write_Command_EpsonS1D13517(0x5A);    //set window for x start
       Write_Data_EpsonS1D13517(0);          //X START REGISTER
       Write_Data_EpsonS1D13517(0);          //Y START REGISTER ZER0
@@ -3667,9 +3487,6 @@ void Interrupt() iv IVT_EXTERNAL_1 ilevel 7 ics ICS_SRS {    // AN25/RPE8/RE8   
       // INT1IF_bit = 0;
         IFS0bits.INT1IF = 0;
         count ++;
-
-        
-
 }
 
 void main() {
@@ -3709,8 +3526,6 @@ void main() {
      Get_Files();
      
      //Write_Picture(1);
-
-
     
    /*TFT_CS = 0;
    //COLOUR TEST BARS, UN-COMMENT TO USE////////////////COLOUR TEST BARS, UN-COMMENT TO USE.
@@ -3729,10 +3544,6 @@ void main() {
 
       Delay_ms(100);
       PointerToSector = Actual_Sector[File_Number];
-      
-      if(File_Number >(FileCount)){
-       //File_Number = 1;
-       }
       
        TFT_CS = 0;
        Write_Command_EpsonS1D13517(0x2A);
@@ -3762,7 +3573,7 @@ void main() {
        if(Memory_buffer>=13){
          Memory_buffer = 0;
        }
-       Delay_ms(300);
+       Delay_ms(2000);
      }
      
      
