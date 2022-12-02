@@ -1,7 +1,7 @@
                                                     /*Anyone is free to copy, modify, publish, use, compile or
                                                     distribute this software, either in source code form or as a compiled
                                                     binary, for non-commercial use only. (i.e. YOU MAY NOT SELL IT)
-                                                    John B 1/12/2022
+                                                    John B 2/12/2022
                                                     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
                                                     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
                                                     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -15,7 +15,7 @@
                                                     // pictures into the SDRAM then display them from the memory.
                                                     //Demonstrated on YouTube 30/11/22.
                                                     //Another First of it's kind on YouTube.
-                                                    //Inproved Text Message For Whole Program 1st December 2022
+                                                    //Inproved Text Message For Whole Program 2nd December 2022
 
 //Started Epson Programming 18:30 11/November 2022
 
@@ -106,9 +106,6 @@ const unsigned char Letter_Font_Length_Bytes = 60;
 const unsigned char Letter_Font_Width = 24;      // full bytes of pixels   8,16,24,32,40 etc
 const unsigned char Letter_Font_Height = 20;
 const unsigned char Letter_Font_Spacing = 2;
-
-
-
 
 //GLCD FontName : San_Diego36x46
 //GLCD FontSize : 36 x 46
@@ -203,8 +200,6 @@ const unsigned char Number_Font_Height = 46;     //San Diego MEDIUM
 const unsigned char Number_Font_Spacing = 1;   //1 = 8 pixels  */
 
 
-
-
 //GLCD FontName : Academy_Engraved_LET22x25
 //GLCD FontSize : 22 x 25
 
@@ -240,19 +235,19 @@ const unsigned char Number_Font_Spacing = 1;     //1 = 8 pixels
 
 #define Black_Out         Write_Data_EpsonS1D13517(0b0000000000000000)
 #define Red_Out           Write_Data_EpsonS1D13517(0b1111100000000000)
-#define Orange_Out        Write_Data_EpsonS1D13517(0b1111001110000000)
+#define Orange_Out        Write_Data_EpsonS1D13517(0b1111110011100001)
 #define Yellow_Out        Write_Data_EpsonS1D13517(0b1111111111100000)
 #define Green_Out         Write_Data_EpsonS1D13517(0b0000011111100000)
 #define Blue_Out          Write_Data_EpsonS1D13517(0b0000000000010111)
-#define Violet_Out        Write_Data_EpsonS1D13517(0b1111000000011111)
-#define Olive_Out         Write_Data_EpsonS1D13517(0b0011100111100011)
-#define White_Out         Write_Data_EpsonS1D13517(0xFFFF)
-#define Magenta_Out       Write_Data_EpsonS1D13517(0b1111100100001101)
-#define Lime_Out          Write_Data_EpsonS1D13517(0b0111011111101100)
+#define Violet_Out        Write_Data_EpsonS1D13517(0b1000100100011111)
+#define Olive_Out         Write_Data_EpsonS1D13517(0b1000010010100011)
+#define White_Out         Write_Data_EpsonS1D13517(0b1111111111111111)
+#define Magenta_Out       Write_Data_EpsonS1D13517(0b1111100000011111)
+#define Lime_Out          Write_Data_EpsonS1D13517(0b1010111100100000)
 #define Baby_Powder_Out   Write_Data_EpsonS1D13517(0b1110111010001111)
 #define Cyan_Out          Write_Data_EpsonS1D13517(0b0000011111111111)
 #define Lavenderblush_Out Write_Data_EpsonS1D13517(0b1111101111000111)
-#define Beige_Out         Write_Data_EpsonS1D13517(0b1011110000000000)
+#define Beige_Out         Write_Data_EpsonS1D13517(0b1111010011000111)
 
 const unsigned char Black = 0;
 const unsigned char Red = 2;
@@ -339,7 +334,6 @@ void TFT_SET_EpsonS1D13517_5_Inch(){
       TFT_RST = 1;
       TFT_RD = 1;
       TFT_WR = 1;
-      
       TFT_CS = 0;
       
       Write_Command_EpsonS1D13517(0x2A);
@@ -502,12 +496,12 @@ void Init_MCU() {
 unsigned int Background_Colour;
 void Clear_Screen_S1D13517(unsigned int Colour){
 
-    static unsigned long i;
+    unsigned long i;
+    const unsigned int Number_Of_Pixels = 384000;
+    Background_Colour = Colour;
     TFT_CS = 0;
-    Background_Colour = 0x00 | Colour;
-
     Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register  BITS 7,6,5,4 ARE INPUT BUFFER NUMBERS 1 TO 16
-    Write_Data_EpsonS1D13517(0b00000000); //  Buffer 0  WORKS FOR MAIN WINDOW ONLY
+    Write_Data_EpsonS1D13517(0); //  Buffer 0  WORKS FOR MAIN WINDOW ONLY
 
     //REGISTERS AUTO-INCREMENT !
     Write_Command_EpsonS1D13517(0x5A);    //set window
@@ -518,168 +512,135 @@ void Clear_Screen_S1D13517(unsigned int Colour){
     Write_Data_EpsonS1D13517(0x77);       //REG[62h] = 77h, REG[64h] = 03h: Yend = 480
     Write_Data_EpsonS1D13517(0x03);       //REG[64h] = 03h: Yend = 480
 
-    switch (Colour)  {
+    switch(Colour)  {
 
-     case 0:     for(i=0;i<384000;i++){
+     case 1:     for(i=0;i<Number_Of_Pixels;i++){
                  Black_Out;
+                 Background_Colour = 0x00;
                  } break;
-     case 2:     for(i=0;i<384000;i++){
+     case 2:     for(i=0;i<Number_Of_Pixels;i++){
                  Red_Out;
+                 Background_Colour = 0xF800;
                  } break;
-     case 3:     for(i=0;i<384000;i++){
+     case 3:     for(i=0;i<Number_Of_Pixels;i++){
                  Orange_Out;
+                 Background_Colour = 0xFCE1;
                  } break;
-     case 4:     for(i=0;i<384000;i++){
+     case 4:     for(i=0;i<Number_Of_Pixels;i++){
                  Yellow_Out;
+                 Background_Colour = 0xFFE0;
                  } break;
-     case 5:     for(i=0;i<384000;i++){
+     case 5:     for(i=0;i<Number_Of_Pixels;i++){
                  Green_Out;
+                 Background_Colour = 0x07E0;
                  } break;
-     case 6:     for(i=0;i<384000;i++){
+     case 6:     for(i=0;i<Number_Of_Pixels;i++){
                  Blue_Out;
+                 Background_Colour = 0x01F;
                  } break;
-     case 7:     for(i=0;i<384000;i++){
+     case 7:     for(i=0;i<Number_Of_Pixels;i++){
                  Violet_Out;
+                 Background_Colour = 0x891F;
                  } break;
-     case 8:     for(i=0;i<384000;i++){
+     case 8:     for(i=0;i<Number_Of_Pixels;i++){
                  Olive_Out;
+                 Background_Colour = 0x84A3;
                  } break;
-     case 9:     for(i=0;i<384000;i++){
+     case 9:     for(i=0;i<Number_Of_Pixels;i++){
                  White_Out;
+                 Background_Colour = 0xFFFF;
                  } break;
-     case 10:    for(i=0;i<384000;i++){
+     case 10:    for(i=0;i<Number_Of_Pixels;i++){
                  Magenta_Out;
+                 Background_Colour = 0xF81F;
                  } break;
-     case 11:    for(i=0;i<384000;i++){
+     case 11:    for(i=0;i<Number_Of_Pixels;i++){
                  Lime_Out;
+                 Background_Colour = 0xAF20;
                  } break;
-     case 12:    for(i=0;i<384000;i++){
+     case 12:    for(i=0;i<Number_Of_Pixels;i++){
                  Baby_Powder_Out;
+                 Background_Colour = 0xEE8F;
                  } break;
-     case 13:    for(i=0;i<384000;i++){
+     case 13:    for(i=0;i<Number_Of_Pixels;i++){
                  Cyan_Out;
+                 Background_Colour = 0x07FF;
                  } break;
-     case 14:    for(i=0;i<384000;i++){
+     case 14:    for(i=0;i<Number_Of_Pixels;i++){
                  Lavenderblush_Out;
+                 Background_Colour = 0xFBC7;
                  } break;
-     case 15:    for(i=0;i<384000;i++){
+     case 15:    for(i=0;i<Number_Of_Pixels;i++){
                  Beige_Out;
+                 Background_Colour = 0xF4C7;
                  } break;
-     default:    for(i=0;i<384000;i++){
+     default:    for(i=0;i<Number_Of_Pixels;i++){
                  Write_Data_EpsonS1D13517(Colour);
                  } break;
     }
 
    Write_Command_EpsonS1D13517(0x2A);
-   Write_Data_EpsonS1D13517(0b00000001); //Enable the display   Single buffer display (default) page 65  BITS 7,6,5,4 ARE INPUT BUFFER NUMBERS 1 TO 16   Buffer 9 = 1000
+   Write_Data_EpsonS1D13517(1); //Enable the display   Single buffer display (default) page 65  BITS 7,6,5,4 ARE INPUT BUFFER NUMBERS 1 TO 16   Buffer 9 = 1000
    Write_Command_EpsonS1D13517(0x50);    //REG[50h] Display Control Register PAGE 72
    Write_Data_EpsonS1D13517(0x80);       //bit 7 must be set to update display*/
    TFT_CS = 1;
-
 }
 
 unsigned int Pixel;
 void Get_Pixel_Colour(unsigned int Colour){
 
-    switch (Colour)  {
+    switch(Colour)  {
 
-     case 0:     Pixel = 0x00;
+     case 1:     Pixel = 0x00;//Black
                  break;
-     case 1:     Pixel = 0b1111101000000000;
+     case 2:     Pixel = 0xF800;//Red
                  break;
-     case 2:     Pixel = 0b1111000000000000;
+     case 3:     Pixel = 0xFCE1;//Orange
                  break;
-     case 3:     Pixel = 0b1111001110000000;
+     case 4:     Pixel = 0xFFE0;//Yellow
                  break;
-     case 4:     Pixel = 0b1111111111100000;
+     case 5:     Pixel = 0x07E0;//Green
                  break;
-     case 5:     Pixel = 0b0000001100000000;
+     case 6:     Pixel = 0x01F;//Blue
                  break;
-     case 6:     Pixel = 0b0000000000010111;
+     case 7:     Pixel = 0x891F;//Violet
                  break;
-     case 7:     Pixel = 0b1111000000011111;
+     case 8:     Pixel = 0x84A3;//Olive
                  break;
-     case 8:     Pixel = 0b0011100111100011;
+     case 9:     Pixel = 0xFFFF;//White
                  break;
-     case 9:     Pixel = 0b1111111111111111;
+     case 10:    Pixel = 0xF81F;//Magenta
                  break;
-     case 10:    Pixel = 0b1111100100001101;
+     case 11:    Pixel = 0xAF20;//Lime
                  break;
-     case 11:    Pixel = 0b0110011111100000;
+     case 12:    Pixel = 0xEE8F;//Baby_Powder
                  break;
-     case 12:    Pixel = 0b1110111010001111;
+     case 13:    Pixel = 0x07FF;//Cyan
                  break;
-     case 13:    Pixel = 0b0000011111111111;
+     case 14:    Pixel = 0xFBC7;//Lavenderblush
                  break;
-     case 14:    Pixel = 0b1111101111000111;
-                 break;
-     case 15:    Pixel = 0b1011110000000000;
+     case 15:    Pixel = 0xF4C7;//Beige
                  break;
      default:    Pixel = Colour;
                  break;
     }
-
-    switch (Background_Colour)  {
-
-     case 0:     Background_Colour = 0x00;
-                 break;
-     case 1:     Background_Colour = 0b1111101000000000;
-                 break;
-     case 2:     Background_Colour = 0b1111000000000000;
-                 break;
-     case 3:     Background_Colour = 0b1111001110000000;
-                 break;
-     case 4:     Background_Colour = 0b1111111111100000;
-                 break;
-     case 5:     Background_Colour = 0b0000001100000000;
-                 break;
-     case 6:     Background_Colour = 0b0000000000010111;
-                 break;
-     case 7:     Background_Colour = 0b1111000000011111;
-                 break;
-     case 8:     Background_Colour = 0b0011100111100011;
-                 break;
-     case 9:     Background_Colour = 0b1111111111111111;
-                 break;
-     case 10:    Background_Colour = 0b1111100100001101;
-                 break;
-     case 11:    Background_Colour = 0b0110011111100000;
-                 break;
-     case 12:    Background_Colour = 0b1110111010001111;
-                 break;
-     case 13:    Background_Colour = 0b0000011111111111;
-                 break;
-     case 14:    Background_Colour = 0b1111101111000111;
-                 break;
-     case 15:    Background_Colour = 0b1011110000000000;
-                 break;
-     default:    break;
-    }
 }
-
-
 
 void Set_Display_Numbers_EpsonS1D13517(unsigned int X_Position, unsigned int Y_Position){
 
      unsigned int Set_Start_Column = 0x01 | X_Position/4;
      unsigned int Set_Start_Row = 0x00 | Y_position/4;
-
      unsigned int Set_End_Column = Set_Start_Column-2 + Number_Font_width/4; //(bytes -1 bit) 8 pixels = 1 byte, 16 pixels = 2 bytes
      unsigned int Set_End_Row = Set_Start_Row + Number_font_height/4;
-
      TFT_CS = 0;
-    // Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register  BITS 7,6,5,4 ARE INPUT BUFFER NUMBERS 1 TO 16
-    // Write_Data_EpsonS1D13517(0b00000000); //  Buffer 0  WORKS FOR MAIN WINDOW ONLY
-
      //REGISTERS AUTO-INCREMENT !
      Write_Command_EpsonS1D13517(0x5A);              //X START REGISTER
      Write_Data_EpsonS1D13517(Set_Start_Column);     //X START
      Write_Data_EpsonS1D13517(Set_Start_Row);        //Y START REGISTER ZER0
-     Write_Data_EpsonS1D13517(1);                    //Y START REGISTER 1
+     Write_Data_EpsonS1D13517(0);                    //Y START REGISTER 1
      Write_Data_EpsonS1D13517(Set_End_Column);       //X END POSITION
      Write_Data_EpsonS1D13517(Set_End_Row);          //Y END POSITION REGISTER ZER0
      Write_Data_EpsonS1D13517(1);                    //Y END POSITION REGISTER 1
-
      TFT_CS = 1;
 }
 
@@ -688,29 +649,22 @@ void Write_Number_Nine(unsigned int X_Position, unsigned int Y_Position, unsigne
      static unsigned char dataout = 0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
-    for(jj=Number_Font_Length_Bytes*9; jj<Number_Font_Length_Bytes*10; jj++){    //Number Nine
-
-      for (x=0; x<8; x++){
-
-          dataout = Number_Font[jj] &i;
-
-        if(dataout){
-
-          Write_Data_EpsonS1D13517(Pixel);
-         }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-
+     for(jj=Number_Font_Length_Bytes*9; jj<Number_Font_Length_Bytes*10; jj++){    //Number Nine
+     
+       for(x=0; x<8; x++){
+           dataout = Number_Font[jj] &i;
+         if(dataout){
+           Write_Data_EpsonS1D13517(Pixel);
+          }else {Write_Data_EpsonS1D13517(Background_Colour);}
           i=i<<1;
-
-        if (i>128){
+         if(i>128){
               i=1;}
-       }
-     }
+        }
+      }
      TFT_CS = 1;
 }
 
@@ -719,25 +673,18 @@ void Write_Number_Eight(unsigned int X_Position, unsigned int Y_Position, unsign
      static unsigned char dataout = 0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*8; jj<Number_Font_Length_Bytes*9; jj++){
 
        for(x=0; x<8; x++){
-
-          dataout = Number_Font[jj] &i;
-
+           dataout = Number_Font[jj] &i;
          if(dataout){
-
            Write_Data_EpsonS1D13517(Pixel);
-          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }   // Write_Data_EpsonS1D13517(0b1110111010001111)
-
-         i=i<<1;
-
+          }else {Write_Data_EpsonS1D13517(Background_Colour); }
+           i=i<<1;
          if(i>128){
               i=1;}
         }
@@ -750,24 +697,18 @@ void Write_Number_Seven(unsigned int X_Position, unsigned int Y_Position, unsign
      static unsigned char dataout = 0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*7; jj<Number_Font_Length_Bytes*8; jj++){
 
        for(x=0; x<8; x++){
-
-         dataout = Number_Font[jj] &i;
-
+           dataout = Number_Font[jj] &i;
          if(dataout){
-            Write_Data_EpsonS1D13517(Pixel);
+           Write_Data_EpsonS1D13517(Pixel);
           }else {Write_Data_EpsonS1D13517(Background_Colour); }
-
-          i=i<<1;
-
+           i=i<<1;
          if(i>128){
               i=1;}
         }
@@ -780,24 +721,18 @@ void Write_Number_Six(unsigned int X_Position, unsigned int Y_Position, unsigned
      static unsigned char dataout = 0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*6; jj<Number_Font_Length_Bytes*7; jj++){
 
        for(x=0; x<8; x++){
-
-          dataout = Number_Font[jj] &i;
-
+           dataout = Number_Font[jj] &i;
          if(dataout){
             Write_Data_EpsonS1D13517(Pixel);
-          }else  { Write_Data_EpsonS1D13517(Background_Colour);  }
-
-          i=i<<1;
-
+          }else {Write_Data_EpsonS1D13517(Background_Colour); }
+           i=i<<1;
          if(i>128){
               i=1;}
         }
@@ -810,25 +745,18 @@ void Write_Number_Five(unsigned int X_Position, unsigned int Y_Position, unsigne
      static unsigned char dataout = 0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*5; jj<Number_Font_Length_Bytes*6; jj++){
 
        for(x=0; x<8; x++){
-
-         dataout = Number_Font[jj] &i;
-
+           dataout = Number_Font[jj] &i;
          if(dataout){
-
            Write_Data_EpsonS1D13517(Pixel);
-          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-
+          }else {Write_Data_EpsonS1D13517(Background_Colour); }
            i=i<<1;
-
          if(i>128){
               i=1;}
         }
@@ -841,25 +769,18 @@ void Write_Number_Four(unsigned int X_Position, unsigned int Y_Position, unsigne
      static unsigned char dataout=0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*4; jj<Number_Font_Length_Bytes*5; jj++){
 
        for(x=0; x<8; x++){
-
            dataout = Number_Font[jj] &i;
-
          if(dataout){
-
            Write_Data_EpsonS1D13517(Pixel);
-          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-
+          }else {Write_Data_EpsonS1D13517(Background_Colour); }
            i=i<<1;
-
          if(i>128){
               i=1;}
         }
@@ -872,25 +793,18 @@ void Write_Number_Three(unsigned int X_Position, unsigned int Y_Position, unsign
      static unsigned char dataout=0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*3; jj<Number_Font_Length_Bytes*4; jj++){
 
        for(x=0; x<8; x++){
-
-          dataout = Number_Font[jj] &i;
-
-         if (dataout){
-
+           dataout = Number_Font[jj] &i;
+         if(dataout){
             Write_Data_EpsonS1D13517(Pixel);
-          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-
-          i=i<<1;
-
+          }else {Write_Data_EpsonS1D13517(Background_Colour); }
+           i=i<<1;
          if(i>128){
               i=1;}
         }
@@ -903,25 +817,18 @@ void Write_Number_Two(unsigned int X_Position, unsigned int Y_Position, unsigned
      static unsigned char dataout=0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*2; jj<Number_Font_Length_Bytes*3; jj++){
 
        for(x=0; x<8; x++){
-
-          dataout = Number_Font[jj] &i;
-
+           dataout = Number_Font[jj] &i;
          if(dataout){
-
             Write_Data_EpsonS1D13517(Pixel);
-          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
-
+          }else {Write_Data_EpsonS1D13517(Background_Colour); }
            i=i<<1;
-
          if(i>128){
               i=1;}
         }
@@ -934,24 +841,18 @@ void Write_Number_One(unsigned int X_Position, unsigned int Y_Position, unsigned
      static unsigned char dataout=0;
      static unsigned int i=1;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
-
      TFT_CS = 0;
 
      for(jj=Number_Font_Length_Bytes*1; jj<Number_Font_Length_Bytes*2; jj++){
 
-       for (x=0; x<8; x++){
-
-         dataout = Number_Font[jj] &i;
-
-         if (dataout){
+       for(x=0; x<8; x++){
+          dataout = Number_Font[jj] &i;
+         if(dataout){
            Write_Data_EpsonS1D13517(Pixel);
-          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }// Space
-
-          i=i<<1;
-
+          }else  {Write_Data_EpsonS1D13517(Background_Colour); }
+           i=i<<1;
          if(i>128){
               i=1;}
         }
@@ -965,7 +866,6 @@ void Write_Number_Zero(unsigned int X_Position, unsigned int Y_Position, unsigne
      static unsigned char dataout = 0;
      static unsigned int i = 1;
      static unsigned int jj = 0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
      TFT_CS = 0;
@@ -973,16 +873,11 @@ void Write_Number_Zero(unsigned int X_Position, unsigned int Y_Position, unsigne
      for(jj=Number_Font_Start; jj<Number_Font_Length_Bytes*1; jj++){
 
        for(x=0; x<8; x++){
-
           dataout = Number_Font[jj] &i;
-
-         if (dataout){
-
+         if(dataout){
            Write_Data_EpsonS1D13517(Pixel);
-          }else { Write_Data_EpsonS1D13517(Background_Colour);  }
-
-          i=i<<1;
-
+          }else {Write_Data_EpsonS1D13517(Background_Colour); }
+           i=i<<1;
          if(i>128){
               i=1;}
         }
@@ -993,7 +888,6 @@ void Write_Number_Zero(unsigned int X_Position, unsigned int Y_Position, unsigne
 void Write_Number_Space(unsigned int X_Position, unsigned int Y_Position){
      static unsigned int Colour;
      static unsigned int jj=0;
-
      Get_Pixel_Colour(Colour);
      Set_Display_Numbers_EpsonS1D13517(X_Position,Y_Position);
      TFT_CS = 0;
@@ -1585,20 +1479,13 @@ void Write_Number(unsigned long num,unsigned int X_Position,unsigned int Y_Posit
     }}*/
 }
 
-
-
 void Set_Display_Letters_S1D13517(unsigned int X_Position, unsigned int Y_Position){
 
      unsigned int Set_Start_Column = 0x01 | X_Position/4;
      unsigned int Set_Start_Row = 0x00 | Y_position/4;
-
      unsigned int Set_End_Column = Set_Start_Column-2 + Letter_Font_Width/4; //(bytes -1 bit) 8 pixels = 1 byte, 16 pixels = 2 bytes
      unsigned int Set_End_Row = Set_Start_Row + Letter_Font_Height/4;
-
      TFT_CS = 0;
-    // Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register  BITS 7,6,5,4 ARE INPUT BUFFER NUMBERS 1 TO 16
-    // Write_Data_EpsonS1D13517(0b00000000); //  Buffer 0  WORKS FOR MAIN WINDOW ONLY
-
      //REGISTERS AUTO-INCREMENT !
      Write_Command_EpsonS1D13517(0x5A);              //X START REGISTER
      Write_Data_EpsonS1D13517(Set_Start_Column);     //X START
@@ -1625,8 +1512,8 @@ void Write_Character(unsigned int Letter_Font_Length_Bytes_Start, unsigned int L
           Write_Data_EpsonS1D13517(Pixel);
          }else  {Write_Data_EpsonS1D13517(Background_Colour);  }
           i=i<<1;
-        if (i>128){
-              i=1;}
+        if(i>128){
+             i=1;}
        }
      }
      TFT_CS = 1;
@@ -1670,7 +1557,7 @@ void Write_Character_Space(unsigned int X_Position, unsigned int Y_Position, uns
 void Display_Character(unsigned char Value, unsigned int X_Position, unsigned int Y_Position, unsigned char Colour){
 
      switch (Value)  {
-     case 46:    Write_Character_Dot(X_Position,Y_Position, Colour);
+     case 46:    Write_Character(Letter_Font_Length_Bytes*36,Letter_Font_Length_Bytes*37, X_Position,Y_Position, Colour);//DOT
                  break;
      case 48:    Write_Character(Letter_Font_Length_Bytes*0,Letter_Font_Length_Bytes*1, X_Position,Y_Position, Colour);//0
                  break;
@@ -1843,15 +1730,15 @@ void Display_Character(unsigned char Value, unsigned int X_Position, unsigned in
 //      1Ah  |  2 Bytes  |  First Cluster of the File.
 //      1Ch  |  4 Bytes  |  File Size. 4 bytes
 
-unsigned char   Boot_Sector = 0;   // Sector number of Boot Record
-unsigned long   Root_Directory;  // Sector number of Root Directory
-unsigned int    First_File_Allocation_Table; // Sector number of first FAT
+unsigned char   Boot_Sector = 0;                    //Sector number of Boot Record
+unsigned long   Root_Directory;                     //Sector number of Root Directory
+unsigned int    First_File_Allocation_Table;        //Sector number of first FAT
 unsigned int    Bytes_Per_Sector;
-unsigned int    Sectors_Per_Cluster; //Sectors per Track
-unsigned int    Start_Sector_for_FAT1;   //  Also known as Reserved_Sectors;  0Eh
+unsigned int    Sectors_Per_Cluster;                //Sectors per Track
+unsigned int    Start_Sector_for_FAT1;              //Also known as Reserved_Sectors;  0Eh
 unsigned short  Number_of_File_Allocation_Tables;
-unsigned int    Number_of_Root_Directory_Entries;   // Number of Root Directory Entries
-unsigned int    Sectors_Per_FAT;    //Sectors per FAT
+unsigned int    Number_of_Root_Directory_Entries;   //Number of Root Directory Entries
+unsigned int    Sectors_Per_FAT;                    //Sectors per FAT
 unsigned long   Number_of_Sectors;
 unsigned long   Number_Of_Hidden_Sectors;
 unsigned long   sector;
@@ -1867,7 +1754,7 @@ void Get_Boot_Information(){
 
   Bytes_Per_Sector = Boot_SectorBuffer[0x0B] +256*Boot_SectorBuffer[0x0C];
   Sectors_Per_Cluster = Boot_SectorBuffer[0x0D];
-  Start_Sector_for_FAT1 = Boot_SectorBuffer[0x0E] + (256)*Boot_SectorBuffer[0x0F];  //reserved sector
+  Start_Sector_for_FAT1 = Boot_SectorBuffer[0x0E] + (256)*Boot_SectorBuffer[0x0F];  //Reserved Sector
   Number_of_File_Allocation_Tables = Boot_Sectorbuffer[0x10];
   Number_of_Root_Directory_Entries = Boot_SectorBuffer[0x11] + (256)*Boot_SectorBuffer[0x12];
   Sectors_Per_FAT = Boot_SectorBuffer[0x16] + (256)*Boot_SectorBuffer[0x17];
@@ -1876,23 +1763,18 @@ void Get_Boot_Information(){
   sectorb2 =   Boot_SectorBuffer[0x21];
   sectorb3 =   Boot_SectorBuffer[0x20];
   Number_of_Sectors =  sectorb0<<24 | sectorb1<<16 | sectorb2<<8 | sectorb3;
-
   First_File_Allocation_Table = Boot_Sector + Start_Sector_for_FAT1;   //=6     233 * 2
   Root_Directory = First_File_Allocation_Table + (Sectors_Per_FAT * Number_of_File_Allocation_Tables);
   //Sectors_Smaller_Than_32MB = Boot_SectorBuffer[0x13];
 }
-unsigned int Text_Line_Start_x = 30;
-unsigned int Number_Start_x = 350;
-unsigned char Font_Height = 34;
 
 void Show_Boot_information(){
     unsigned char Message[]  = "Root Directory";
     unsigned char xpos_Start = 120;
-    unsigned char ypos = 300;
-    unsigned char x;
-   // Get_Boot_Information();
-
+    unsigned char x=0;
+    unsigned char Font_Height = 34;
     Clear_Screen_S1D13517(Black);
+    
     Write_Number(Number_of_Root_Directory_Entries,2,Font_Height,White);
     //"Root_Entries   ="
     Write_Number(Sectors_Per_FAT,2,Font_Height*2,White);
@@ -1911,7 +1793,6 @@ void Show_Boot_information(){
     Write_Number(Cluster_Size,2,Font_Height*8,White);
     //"Cluster Size   ="
     Write_Number(Root_Directory,2,Font_Height*9,White);
-    
     for(x=0; x<15; x++){
      Display_Character(Message[x],xpos_Start+Letter_Font_Width*x,Font_Height*9+8,Red);   //ROOT DIRECTORY
     }
@@ -1960,12 +1841,10 @@ void Set_Bus_Speeds(){
     PRECONbits.PREFEN = 0b11; // Predictive Prefetch Enable (Enable predictive prefetch for any address)  bit 5-4 PREFEN<1:0>: Predictive Prefetch Enable bits
     PRECONbits.PFMWS = 0b10;  // PFM Access Time Defined in Terms of SYSCLK Wait States (Two wait states)
     CFGCONbits.ECCCON = 3;
-
     SYSKEY = 0x00;
 }
 
-
-void InitialiseSlowSPI(unsigned int Speed){                               //bus speed = 112'000'000  //divide by 280 = clock of 400 kHz
+void InitialiseSlowSPI(unsigned int Speed){
   SPI3_Init_Advanced(_SPI_MASTER, _SPI_8_BIT, Speed, _SPI_SS_DISABLE, _SPI_DATA_SAMPLE_MIDDLE, _SPI_CLK_IDLE_HIGH, _SPI_ACTIVE_2_IDLE);
 }
 void InitialiseFastSPI(unsigned char Speed){
@@ -1991,11 +1870,14 @@ void InitialiseFastSPI(unsigned char Speed){
 #define CMD55  (64 + 55)                   // APP_CMD  Leading command before ACMD command.
 #define CMD58  (64 + 58)                   // READ_OCR
 
-unsigned int sdcardbuffer_X_position = 30;
-unsigned int sdcardbuffer_Y_position = 30;
+
+
+
+unsigned int Colour = White;
 unsigned char Counter = 0;
 unsigned char File_Type = 3;    //  FAT16 = 3
-unsigned int Colour = White;
+unsigned int xpos_Start = 50;
+unsigned int ypos = 20;
 
 void Initialise_SDCARD(){
 
@@ -2008,8 +1890,7 @@ void Initialise_SDCARD(){
       unsigned char Message6[] = "Wrong File Type Adjusting Down";
       unsigned char Message7[] = "Wrong Type SD Card";
       unsigned int x = 0;
-      unsigned int xpos_Start = 50;
-      unsigned int ypos = 20;
+
       unsigned char junkBuffer[8];
       unsigned char loop8;
       unsigned char loop55;
@@ -2043,9 +1924,9 @@ void Initialise_SDCARD(){
       Boot_SectorBuffer[0] = SPI3_Read(dummybuffer);  // Response R1 with LSB Set To 1
       SD_Card_Chip_Select = 1;
 
-      Write_Number(Boot_SectorBuffer[0],sdcardbuffer_X_position,sdcardbuffer_Y_position,White);
-      Write_Number(0,sdcardbuffer_X_position+250,sdcardbuffer_Y_position,Black);
-      Delay_ms(300);
+      //Write_Number(Boot_SectorBuffer[0],sdcardbuffer_X_position,sdcardbuffer_Y_position,White);
+      //Write_Number(0,sdcardbuffer_X_position+250,sdcardbuffer_Y_position,Black);
+      Delay_ms(100);
 
       while(Boot_SectorBuffer[0] <1);
 
@@ -2129,7 +2010,7 @@ void Initialise_SDCARD(){
         if(Counter >5){
            Clear_Screen_S1D13517(Red);
            for(x=0; x<12; x++){
-            Display_Character(Message1[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   41   ERROR   Initialise_SDCARD"
+            Display_Character(Message1[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   41   ERROR   Initialise_SDCARD"
            }
           Delay_ms(200);
          }
@@ -2164,7 +2045,7 @@ void Initialise_SDCARD(){
         if(Counter >5){
            Clear_Screen_S1D13517(Red);
            for(x=0; x<12; x++){
-            Display_Character(Message2[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   58   ERROR   Initialise_SDCARD"
+            Display_Character(Message2[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   58   ERROR   Initialise_SDCARD"
            }
            Delay_ms(300);
          }
@@ -2196,7 +2077,7 @@ void Initialise_SDCARD(){
         if(Counter >6){
           Clear_Screen_S1D13517(Red);
           for(x=0; x<12; x++){
-            Display_Character(Message3[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   16   ERROR   Initialise_SDCARD"
+            Display_Character(Message3[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   16   ERROR   Initialise_SDCARD"
            }
            Delay_ms(200);
          }
@@ -2228,7 +2109,7 @@ void Initialise_SDCARD(){
         if(Counter >5){
           Clear_Screen_S1D13517(Red);
           for(x=0; x<12; x++){
-            Display_Character(Message4[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   17   ERROR   Initialise_SDCARD"
+            Display_Character(Message4[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //"COMMAND   17   ERROR   Initialise_SDCARD"
            }
            Delay_ms(200);
 
@@ -2253,13 +2134,10 @@ void Initialise_SDCARD(){
        }
       SD_Card_Chip_Select = 1;
 
-      sdcardbuffer_X_position = 3;
-      sdcardbuffer_Y_position = 30;
-
-      if(Boot_SectorBuffer[511] !=170){     //
+      if(Boot_SectorBuffer[511] !=170){
          Clear_Screen_S1D13517(Red);
          for(x=0; x<29; x++){
-          Display_Character(Message5[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"Wrong  File  Type  Set   ADJUSTING   ++"
+          Display_Character(Message5[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //"Wrong  File  Type  Set   ADJUSTING   ++"
          }
          Delay_ms(500);
         if(Boot_SectorBuffer[512]==170){
@@ -2272,7 +2150,7 @@ void Initialise_SDCARD(){
       if(Boot_SectorBuffer[511] !=170){     //
          Clear_Screen_S1D13517(Red);
          for(x=0; x<31; x++){
-          Display_Character(Message6[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"Wrong  File  Type  Set   ADJUSTING   Down"
+          Display_Character(Message6[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //"Wrong  File  Type  Set   ADJUSTING   Down"
          }
          Delay_ms(500);
         if(Boot_SectorBuffer[510]==170){
@@ -2287,7 +2165,7 @@ void Initialise_SDCARD(){
           if(Boot_SectorBuffer[512] !=170){
             Clear_Screen_S1D13517(Red);
             for(x=0; x<19; x++){
-             Display_Character(Message7[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //"Wrong Type of SD Card"
+             Display_Character(Message7[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //"Wrong Type of SD Card"
             }
             Delay_ms(300);
            }
@@ -2301,28 +2179,26 @@ void Initialise_SDCARD(){
 
       if(Boot_SectorBuffer[54] ==70){
           for(x=0; x<19; x++){
-           Display_Character(Message[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //FAT 16 INITIALISED
+           Display_Character(Message[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //FAT 16 INITIALISED
           }
        }
-
       //TFT_Write_Text("Boot  Signature  = ",2,60);
       //TFT_Write_Text("File  Type  Number  = ",2,90);
-
       SPI3CONbits.DISSDO = 0;  //TURNS ON SERIAL DATA OUT
       Delay_ms(200);
 }
 
 unsigned char dummybuffer;
 unsigned char dataBuffer[512]; //SECTOR BUFFER
-unsigned long Address2;
+//unsigned long Address2;
 void Read_Sector(unsigned long Address){
 
-    unsigned char xpos_Start = 40;
-    unsigned char ypos = 30;
     unsigned char Message1[] = "CMD 17 Read Sector";
     unsigned char loop17;
     unsigned int x = 0;
     unsigned char junkBuffer[8];
+    xpos_Start = 40;
+    ypos = 30;
     SPI3CONbits.DISSDO = 0;   //TURNS ON SERIAL DATA OUT
 
     loop17:
@@ -2380,12 +2256,10 @@ struct File_Details{
     unsigned long Starting_Cluster[15];
 }File;
 
-unsigned int  Max_Bytes = 512;
-unsigned int  Image_Data_Starts_At;
-unsigned int  Bytes_Left_To_Read = 0;
-unsigned int  Xpos_start = 100;
-unsigned int  ypos = 20;
-unsigned int  Location = 8;
+unsigned int Max_Bytes = 512;
+unsigned int Bytes_Left_To_Read;
+unsigned int Image_Data_Starts_At;
+unsigned int Location = 8;
 
 unsigned char File_Number = 0;
 unsigned long SizeData31 = 0;
@@ -2429,14 +2303,15 @@ void Get_Files(){
      unsigned char Message1[] = "File_Count";
      unsigned char Message2[] = "File_Size";
      unsigned char Message3[] = "Actual_Location_Calculator";
-     
+     Xpos_start = 100;
+     ypos = 20;
      Sector = (512)*Root_Directory;
      Read_Sector(Sector);          //<<<<<<<<<<<<<<<<<<READ ROOT DIRECTORY TO VIEW FILES<<<<<<<<<
      Colour = White;
      Clear_Screen_S1D13517(Lavenderblush);
      
      for(x=0; x<12; x++){
-      Display_Character(dataBuffer[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //Display Sdcard Name
+      Display_Character(dataBuffer[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //Display Sdcard Name
      }
      
      //////////////////////////////////////////////////////////////////////////////////////////////
@@ -2445,7 +2320,7 @@ void Get_Files(){
      Xpos_start = 450;
      
      for(x=0; x<7; x++){
-       Display_Character(Message0[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //SECTOR
+       Display_Character(Message0[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //SECTOR
       }
      Write_Number(Sector/512,Xpos_start+Letter_Font_Width*7,ypos,Black);            //SECTOR NUMBER
      Xpos_start = 20;
@@ -2491,9 +2366,9 @@ void Get_Files(){
       Xpos_start = 450;
       
       for(x=0; x<7; x++){
-       Display_Character(Message0[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //SECTOR
+       Display_Character(Message0[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //SECTOR
       }
-      Write_Number(Sector/512,Xpos_start+Number_Font_Width*7,ypos,Black);           //SECTOR NUMBER
+      Write_Number(Sector/512,xpos_Start+Number_Font_Width*7,ypos,Black);           //SECTOR NUMBER
       Xpos_start = 20;
       ypos = 150;
 
@@ -2530,14 +2405,14 @@ void Get_Files(){
      ypos +=10;
      
      for(x=0; x<11; x++){
-       Display_Character(Message1[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //FILE COUNT
+       Display_Character(Message1[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //FILE COUNT
       }
      FileCount = File_Number;
      Write_Number(File_Number,340,ypos,Yellow);
      ypos +=32;
      
       for(x=0; x<10; x++){
-       Display_Character(Message2[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);    //FILE SIZE
+       Display_Character(Message2[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);    //FILE SIZE
       }
      Write_Number(File.TotalFileSize,340,ypos,Lime);                          //FILE SIZE NUMBER
      Delay_ms(400);
@@ -2554,7 +2429,7 @@ void Get_Files(){
      Clear_Screen_S1D13517(Black);
      
      for(x=0; x<27; x++){
-       Display_Character(Message3[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);   //ACTUAL SECTOR LOCATION CALCULATOR
+       Display_Character(Message3[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);   //ACTUAL SECTOR LOCATION CALCULATOR
       }
      ypos +=32;
 
@@ -2578,6 +2453,7 @@ void Get_Files(){
 
 void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Number){
 
+
      unsigned char Message4[] = "Not_A_Bitmap";
      Max_Bytes = 512;
      Read_Sector(512 * Actual_Sector);  //ACTUAL SECTOR WHERE PICTURE STARTS, NOT THE SAME AS START OF FILE. THIS IS READING THE BITMAP HEADER
@@ -2587,7 +2463,7 @@ void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Numb
       }}else { Clear_Screen_S1D13517(Red);
                Delay_ms(300);
                for(x=0; x<13; x++){
-                 Display_Character(Message4[x],Xpos_start+Letter_Font_Width*x,ypos,Colour);  //NOT A BITMAP
+                 Display_Character(Message4[x],xpos_Start+Letter_Font_Width*x,ypos,Colour);  //NOT A BITMAP
                 }
               }
 
@@ -2647,20 +2523,20 @@ void Write_Picture(unsigned long Actual_Sector, unsigned char Memory_Buffer_Numb
       TFT_CS = 1;
 }
 
-void Show_Picture_In_Picture(){
+/*void Show_Picture_In_Picture(){  //UNDER CONSTRUCTION
 
     unsigned long x;
     TFT_CS = 0;
     Write_Command_EpsonS1D13517(0x52);    //page 73 Input Mode Register
     Write_Data_EpsonS1D13517(0b10000000);  //WORKS FOR Single buffers not PIP  bit 3 is Transparency
 
-  /*Write_Command_EpsonS1D13517(0x2C);   //page 66
+    Write_Command_EpsonS1D13517(0x2C);   //page 66
     Write_Data_EpsonS1D13517(0x00);
     Write_Command_EpsonS1D13517(0x2E);    //page 66
     Write_Data_EpsonS1D13517(0x00);
     Write_Command_EpsonS1D13517(0x30);    //page 66
-    Write_Data_EpsonS1D13517(0x28);       //140000  BUFFER 2*/
-    
+    Write_Data_EpsonS1D13517(0x28);       //140000  BUFFER 2
+
     //PIP 1 PIP 1
     /*Write_Command_EpsonS1D13517(0x32);   //REG[32h] = PIP1 X Start  PAGE 68
     Write_Data_EpsonS1D13517(0x2E);
@@ -2673,10 +2549,10 @@ void Show_Picture_In_Picture(){
     Write_Command_EpsonS1D13517(0x3A);   //REG[3Ah] = PIP1 Y END 1
     Write_Data_EpsonS1D13517(0x55);
     Write_Command_EpsonS1D13517(0x3C);   //REG[3Ch] = PIP1 Y END 2
-    Write_Data_EpsonS1D13517(0x01);*/
+    Write_Data_EpsonS1D13517(0x01);
 
     //PIP 2  PIP 2
-   /*Write_Command_EpsonS1D13517(0x44);   //REG[44h] = PIP2 X Start
+    Write_Command_EpsonS1D13517(0x44);   //REG[44h] = PIP2 X Start
     Write_Data_EpsonS1D13517(0x2E);
     Write_Command_EpsonS1D13517(0x46);   //REG[46h] = PIP2 Y Start
     Write_Data_EpsonS1D13517(0x25);
@@ -2687,8 +2563,8 @@ void Show_Picture_In_Picture(){
     Write_Command_EpsonS1D13517(0x4C);   //REG[4Ch] = PIP2 Y END 1
     Write_Data_EpsonS1D13517(0x55);
     Write_Command_EpsonS1D13517(0x4E);   //REG[4Eh] = PIP2 Y END 2
-    Write_Data_EpsonS1D13517(0x01);*/
-    
+    Write_Data_EpsonS1D13517(0x01);
+
     //Normal Window, NOT PIP    THIS WORKS WITH DOUBLE BUFFER FOR PICTURE IN PICTURE  OR SINGLE BUFFERS
     //REGISTERS AUTO-INCREMENT !
     Write_Command_EpsonS1D13517(0x5A);    //set window
@@ -2698,24 +2574,22 @@ void Show_Picture_In_Picture(){
     Write_Data_EpsonS1D13517(0xC6);       //REG[60h] = C6h: Xend = 800
     Write_Data_EpsonS1D13517(0x77);       //REG[62h] = 77h, REG[64h] = 03h: Yend = 480
     Write_Data_EpsonS1D13517(0x03);       //REG[64h] = 03h: Yend = 480
-      
+
     for(x = 0; x<768000; x+=2){
       //PMDIN = Tower8x4_bmp[x]  | (Tower8x4_bmp[x+1]<<8);
       }
       TFT_CS = 1;
-}
+}*/
 
-unsigned char once1 = 0;
-unsigned int count = 0;
+
+
 void Interrupt() iv IVT_EXTERNAL_1 ilevel 7 ics ICS_SRS {    // AN25/RPE8/RE8   Interrupts PAGE 116      INTCON: INTERRUPT CONTROL REGISTER page 141
 
-      // INT1IF_bit = 0;
         IFS0bits.INT1IF = 0;
-        count ++;
 }
 
 void main() {
-     unsigned char once = 0;
+
      unsigned char Memory_buffer = 0;
      unsigned int PointerToSector;
      
@@ -2735,9 +2609,6 @@ void main() {
 
      Show_Boot_information();
 
-     Clear_Screen_S1D13517(Lavenderblush);
-     Delay_ms(10);
-
      TRISE8_bit = 1;
      INT1R = 1101; // = RPE8  INTERRUPT FOR BLANKING PERIOD & OR ALPHA BLEND
 
@@ -2749,8 +2620,6 @@ void main() {
      INTCONbits.INT1EP = 1; //required INT1EP: External Interrupt 1 Edge Polarity Control bit 1 = Rising edge
      
      Get_Files();
-     
-     //Write_Picture(1);
     
      /*TFT_CS = 0;
      //COLOUR TEST BARS, UN-COMMENT TO USE////////////////COLOUR TEST BARS, UN-COMMENT TO USE.
